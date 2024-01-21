@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">
+            <p>Microsoft Teams</p>
+        </div>
+
+        <div class="form-container">
+            <div class="form">
+                <img src="./img/login_people.jpeg" alt="people">
+                <h1>職場、学校または<br>Microsoftアカウントを入力します<br></h1>
+                <form action="check_login.php" method="POST">
+                    <input type="text" name="user" class="form-control" placeholder="サインインアドレス" size="30"><br>
+                    <input type="password" name="pass" class="form-control" placeholder="パスワード" size="30"><br>
+                    <button type="submit" class="btn btn-primary">サインイン</button>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="info">
+            <p>まだ Teams に参加していませんか？ <a href="signup.php">詳細はこちら</a></p>
+            <a class="signup" href="signup.php">無料で登録</a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

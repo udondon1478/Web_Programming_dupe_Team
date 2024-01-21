@@ -1,0 +1,103 @@
+/*リセットCSS*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #EBEBEB;
+  }
+
+  .title{
+    text-align: center;
+    font-size: 2rem;
+    padding: 2rem;
+  }
+
+  .title p{
+    color: #6C7AB4;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    width: 50%;
+  }
+
+  .form img {
+    /*円形にトリミング*/
+    border-radius: 50%;
+    width: 10rem;
+    height: 10rem;
+    margin: 2rem 0 2rem 0;
+
+  }
+
+  .form h1 {
+    font-size: 2rem;
+    /*中央寄せ*/
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .form form{
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .form input {
+    width: 80%;
+    height: 2rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    padding-left: 1rem;
+    background-color: #EBEBEB;
+  }
+
+    .form input:focus {
+        outline: none;
+        border-color: #000;
+    }
+
+    .form button {
+        width: 80%;
+        height: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #ccc;
+        background-color: #EBEBEB;
+        cursor: pointer;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-top: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .info p a{
+        color: #6C7AB4;
+    }
+
+    .signup {
+        margin-top: 2rem;
+        background-color: #6C7AB4;
+    }
