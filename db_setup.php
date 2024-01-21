@@ -43,32 +43,25 @@ $dbh->exec($sql);//SQLの実行
 echo "テスト用一般ユーザを登録しました<br>";
 
 //チームテーブルの作成
-$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, access_users JSON NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 $dbh->exec($sql);//SQLの実行
 echo "team_tbを作成しました<br>";
 
 
 //チャンネルテーブルの作成
-$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL,`status` INT NOT NULL);";    //status: 0=private, 1=public, 2=share
+$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, `status` BOOLEAN );";    //status: 0=private, 1=public
 $dbh->exec($sql);//SQLの実行
-echo "チャンネルを登録しました<br>";
+echo "channel_tbを作成しました<br>";
 
-//一般の登録
-$sql = "INSERT INTO `channel_tb` (`name`,`is_public`)
-VALUES('一般',TRUE);";
+//投稿テーブルの作成
+$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`),`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 $dbh->exec($sql);//SQLの実行
-echo "一般チャンネルを登録しました<br>";
+echo "post_tbを作成しました<br>";
 
-//雑談(private)の登録
-$sql = "INSERT INTO `channel_tb` (`name`,`is_public`)
-VALUES('雑談',FALSE);";
+//返信テーブルの作成
+$sql = "CREATE TABLE `reply_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,FOREIGN KEY (`post_id`) REFERENCES `post_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`),`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 $dbh->exec($sql);//SQLの実行
-echo "雑談チャンネルを登録しました<br>";
-
-//投稿の登録
-$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
-$dbh->exec($sql);//SQLの実行
-echo "投稿を登録しました<br>";
+echo "reply_tbを作成しました<br>";
 
 echo "<a href='db_drop.php'>DBの削除<br></a>";
 ?>
