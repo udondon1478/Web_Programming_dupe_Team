@@ -52,10 +52,10 @@ if ($dbh) {
                 <div class="navbar-nav">
                     <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
                     <?php
-                    if ($_SESSION['is_admin'] == TRUE) {
-                            //管理者権限あり
+                    if ($_SESSION['is_admin'] == 1) {
+                            
                             echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
-                            //アカウント作成ページ
+                            
                             echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
                         }
                         ?>

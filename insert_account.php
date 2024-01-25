@@ -12,7 +12,7 @@ require_once(__DIR__ . '/functions.php');
 $login_name = htmlspecialchars($_POST['login_name'], ENT_QUOTES, 'UTF-8');
 $login_password = htmlspecialchars($_POST['login_password'], ENT_QUOTES, 'UTF-8');
 $user_name = htmlspecialchars($_POST['user_name'], ENT_QUOTES, 'UTF-8');
-$admin_flag = htmlspecialchars($_POST['admin_flag'], ENT_QUOTES, 'UTF-8');
+$is_admin = htmlspecialchars($_POST['is_admin'], ENT_QUOTES, 'UTF-8');
 ?>
 
 <?php
@@ -22,7 +22,7 @@ $dbh = connectDB();
 if ($dbh) {
     //データベースへ書き込むSQL文
     $sql = 'INSERT INTO `user_tb`(`login_name`,
-    `login_password`,`user_name`,`admin_flag`)
+    `login_password`,`user_name`,`is_admin`)
     VALUES("' . $login_name . '", "' . $login_password . '","' . $user_name . '","' . $admin_flag . '")';
 
     $sth = $dbh->query($sql); //SQLの実行
