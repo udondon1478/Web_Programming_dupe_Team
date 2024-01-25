@@ -9,10 +9,10 @@ require_once(__DIR__ . '/functions.php');
 //DBへの接続
 $dbh = connectDB();
 if ($dbh) {
-    //「user_name」が$_SESSION['name']と一致するレコード群の情報を取得
-    $sql = 'SELECT `is_admin` FROM `user_tb` WHERE `user_name` = :user_name';
+
+    $sql = 'SELECT `is_admin` FROM `user_tb` WHERE `username` = :user_name';
     $sth = $dbh->prepare($sql); //SQLの準備
-    $sth->bindValue(':user_name', $_SESSION['name'], PDO::PARAM_STR); //プレースホルダーに値をバインド
+    $sth->bindValue(':username', $_SESSION['name'], PDO::PARAM_STR); //プレースホルダーに値をバインド
     $sth->execute(); //SQLの実行
     $buff = $sth->fetch(PDO::FETCH_ASSOC); //結果の取得
 }

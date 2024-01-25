@@ -26,7 +26,7 @@ if ($dbh) {
             $login = 'OK'; //ログイン成功
             $_SESSION['name'] = $result[0]['username']; //ユーザ名をセッション変数に保存
             $_SESSION['id'] = $result[0]['id']; //ユーザIDをセッション変数に保存
-            $_SESSION['admin_flag'] = $result[0]['is_admin'];   //admin_flagをセッション変数に保存
+            $_SESSION['is_admin'] = $result[0]['is_admin'];   //admin_flagをセッション変数に保存
         }else {
             $login = 'ERROR'; //ログイン失敗
         }
@@ -38,21 +38,11 @@ if ($dbh) {
 
 //認証
 //if (($user == 'x22004') && ($pass == 'webphp')) {
-    if(count($result) == 1){//配列数が唯一の場合
-    //ログイン成功
-    $login = 'OK';
-    //表示用ユーザ名をセッション変数に保存
-    $_SESSION['name'] = $result[0]['name'];
-} else {
-    //ログイン失敗
-    $login = 'Error';
-}
 $sth = null; //データの消去
 $dbh = null; //DBを閉じる
 
 //セッション変数に代入
 $_SESSION['login'] = $login;
-$_SESSION['result'] = $result;
 
 //移動
 if ($login == 'OK') {
