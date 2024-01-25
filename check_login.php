@@ -52,6 +52,7 @@ $dbh = null; //DBを閉じる
 
 //セッション変数に代入
 $_SESSION['login'] = $login;
+$_SESSION['result'] = $result;
 
 //移動
 if ($login == 'OK') {
