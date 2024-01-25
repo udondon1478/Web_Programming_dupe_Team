@@ -31,13 +31,13 @@ echo "user_tbを作成しました<br>";
 
 
 //テスト用管理者ユーザの登録
-$sql = "INSERT INTO `user_tb` (`email`,`password`,`name`,`is_admin`)
+$sql = "INSERT INTO `user_tb` (`email`,`password`,`username`,`is_admin`)
 VALUES('x22004xx@aitech.ac.jp','".password_hash('webphp',PASSWORD_DEFAULT)."','あん',TRUE);";
 $dbh->exec($sql);//SQLの実行
 echo "テスト用管理者ユーザを登録しました<br>";
 
 //テスト用一般ユーザの登録
-$sql = "INSERT INTO `user_tb` (`email`,`password`,`name`,`is_admin`)
+$sql = "INSERT INTO `user_tb` (`email`,`password`,`username`,`is_admin`)
 VALUES('x22999xx@aitech.ac.jp','".password_hash('webphp',PASSWORD_DEFAULT)."','ゆう',FALSE);";
 $dbh->exec($sql);//SQLの実行
 echo "テスト用一般ユーザを登録しました<br>";
@@ -47,19 +47,25 @@ $sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name`
 $dbh->exec($sql);//SQLの実行
 echo "team_tbを作成しました<br>";
 
-
 //チャンネルテーブルの作成
-$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, `status` BOOLEAN );";    //status: 0=private, 1=public
+$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, `status` BOOLEAN DEFAULT TRUE);";    //status: 0=private, 1=public
 $dbh->exec($sql);//SQLの実行
 echo "channel_tbを作成しました<br>";
 
+//中間テーブルusers_channelsの作成
+//accessed_at: チャンネルに対してユーザーが最終アクセスをした日時
+$sql = "CREATE TABLE `users_channels`(`id` INT AUTO_INCREMENT PRIMARY KEY,`user_id` INT NOT NULL,`channel_id` INT NOT NULL,`accessed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`),FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`));";
+$dbh->exec($sql);//SQLの実行
+echo "users_channelsを作成しました<br>";
+
 //投稿テーブルの作成
-$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`),`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+//ユーザー
+$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
 $dbh->exec($sql);//SQLの実行
 echo "post_tbを作成しました<br>";
 
 //返信テーブルの作成
-$sql = "CREATE TABLE `reply_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,FOREIGN KEY (`post_id`) REFERENCES `post_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`),`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+$sql = "CREATE TABLE `reply_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`post_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`post_id`) REFERENCES `post_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
 $dbh->exec($sql);//SQLの実行
 echo "reply_tbを作成しました<br>";
 
