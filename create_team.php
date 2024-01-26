@@ -53,12 +53,12 @@ if ($dbh) {
                     <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
                     <?php
                     if ($_SESSION['is_admin'] == 1) {
-                            
-                            echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
-                            
-                            echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                        }
-                        ?>
+
+                        echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
+
+                        echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
+                    }
+                    ?>
                     <a class="nav-item nav-link" href="message.php">メッセージを書く</a> <br>
                     <a class="nav-item nav-link" href="show_message.php">メッセージを読む</a> <br>
                     <a class="nav-item nav-link" href="search_message.php">メッセージを探す</a> <br>
@@ -66,7 +66,43 @@ if ($dbh) {
                     <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
             </nav>
+        </div>
 
+        <!-- 条件参照用メモ -->
+        <!-- 適宜notionの設計図を確認すべし -->
+        <!-- 管理者権限は関係なし -->
+        <!-- データベース「team_tb」にチームを追加 -->
+        <!-- フィールドの項目は「team_name」「access_users」 -->
+        <div>
+            <h2>チーム作成</h2>
+            <form action="insert_team.php" method="post">
+                <div class="form-group">
+                    <label for="team_name">チーム名</label>
+                    <input type="text" class="form-control" id="team_name" name="team_name" placeholder="チーム名を入力してください">
+                </div>
+                <div class="form-group">
+                    <label for="access_users">アクセスユーザー</label><br>
+                    <!-- アクセス可能なユーザーをデータベースから選択、user_tbのフィールド「username」から選択できるようにする -->
+                    <!-- JSONでの複数保存、一番めんどくさそうな部分、notionの設計図を確認 -->
+                    <?php
+                    // データベースに接続
+                    $dbh = connectDB();
+                    if ($dbh) {
+                        // データベースに接続成功
+                        $sql = 'SELECT username FROM user_tb';
+                        $sth = $dbh->prepare($sql);
+                        $sth->execute();
+                        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($rows as $row) {
+                            echo '<input type="checkbox" name="access_users[]" value="' . $row['username'] . '">' . $row['username'] . '<br>';
+                        }
+                    } else {
+                        // データベースに接続失敗
+                        echo 'データベースに接続できません。';
+                    }
+                    ?>
+                    <button type="submit" class="btn btn-primary">作成</button>
+                </div>
         </div>
 
 
@@ -76,7 +112,7 @@ if ($dbh) {
         <hr>
     </div>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 

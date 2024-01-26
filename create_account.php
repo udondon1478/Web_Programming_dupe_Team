@@ -68,35 +68,36 @@ if ($dbh) {
         <!-- 条件参照用メモ -->
         <!-- 管理者権限があるユーザーの場合、アカウントの作成ができる -->
         <!-- データベースの「user_tb」に新規ユーザーを追加する -->
-        <!-- レコードの項目は「login_name」「login_password」「user_name」「admin_flag」の4つ -->
-        <!-- 「admin_flag」はラジオボタンで切り替える -->
+        <!-- レコードの項目は「email」「password」「username」「is_admin」の4つ -->
+        <!-- 「is_admin」はラジオボタンで切り替える -->
         <div>
             <?php
             if ($_SESSION['is_admin'] == 1) {
+                
                 //管理者権限あり
                 echo '<h2>▪️アカウント作成</h2>';
                 echo '<form action="insert_account.php" method="POST">';
                 echo '<div class="form-group">';
-                echo '<label for="login_name">ログイン名</label>';
-                echo '<input type="text" class="form-control" id="login_name" name="login_name" placeholder="ログイン名を入力してください">';
+                echo '<label for="email">ログイン用メールアドレス</label>';
+                echo '<input type="email" class="form-control" id="email" name="email" placeholder="メールアドレスを入力してください">';
                 echo '</div>';
                 echo '<div class="form-group">';
-                echo '<label for="login_password">パスワード</label>';
-                echo '<input type="password" class="form-control" id="login_password" name="login_password" placeholder="パスワードを入力してください">';
+                echo '<label for="password">パスワード</label>';
+                echo '<input type="password" class="form-control" id="password" name="password" placeholder="パスワードを入力してください">';
                 echo '</div>';
                 echo '<div class="form-group">';
-                echo '<label for="user_name">ユーザー名</label>';
-                echo '<input type="text" class="form-control" id="user_name" name="user_name" placeholder="ユーザー名を入力してください">';
+                echo '<label for="username">ユーザー名</label>';
+                echo '<input type="text" class="form-control" id="username" name="username" placeholder="ユーザー名を入力してください">';
                 echo '</div>';
                 echo '<div class="form-group">';
                 echo '<label for="is_admin">管理者権限</label>';
                 echo '<div class="form-check">';
-                echo '<input class="form-check-input" type="radio" name="admin_flag" id="admin_flag" value="1">';
-                echo '<label class="form-check-label" for="admin_flag">あり</label>';
+                echo '<input class="form-check-input" type="radio" name="is_admin" id="is_admin" value="1">';
+                echo '<label class="form-check-label" for="is_admin">あり</label>';
                 echo '</div>';
                 echo '<div class="form-check">';
-                echo '<input class="form-check-input" type="radio" name="admin_flag" id="admin_flag" value="0" checked>';
-                echo '<label class="form-check-label" for="admin_flag">なし</label>';
+                echo '<input class="form-check-input" type="radio" name="is_admin" id="is_admin" value="0" checked>';
+                echo '<label class="form-check-label" for="is_admin">なし</label>';
                 echo '</div>';
                 echo '</div>';
                 echo '<button type="submit" class="btn btn-primary">アカウントを作成する</button>';
