@@ -43,9 +43,14 @@ $dbh->exec($sql);//SQLの実行
 echo "テスト用一般ユーザを登録しました<br>";
 
 //チームテーブルの作成
-$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 $dbh->exec($sql);//SQLの実行
 echo "team_tbを作成しました<br>";
+
+//チームメンバー中間テーブルの作成
+$sql = "CREATE TABLE `team_users_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`user_id` INT NOT NULL,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
+$dbh->exec($sql);//SQLの実行
+echo "team_users_tbを作成しました<br>";
 
 //チャンネルテーブルの作成
 $sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, `status` BOOLEAN DEFAULT TRUE);";    //status: 0=private, 1=public

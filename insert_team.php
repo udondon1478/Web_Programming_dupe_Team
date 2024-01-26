@@ -12,44 +12,30 @@ require_once(__DIR__ . '/functions.php');
 <!-- 適宜notionの設計図を確認すべし -->
 <!-- 管理者権限は関係なし -->
 <!-- データベース「team_tb」にチームを追加 -->
-<!-- フィールドの項目は「team_name」「access_users」 -->
+<!-- フィールドの項目は「team_name」 -->
 
-<!-- アクセス可能なユーザーをデータベースから選択、user_tbのフィールド「id」をteam_tbのフィールド「access_users」に追加できるようにする -->
-<!-- JSONでの複数保存、一番めんどくさそうな部分、notionの設計図を確認 -->
 
 <!-- postで受け取った値を変数に格納 -->
 <?php
 $team_name = $_POST['team_name'];
-//access_usersは配列として受け取る
-//$_POST['access_users']の要素数分繰り返す
-for ($i = 0; $i < count($_POST['access_users']); $i++) {
-    $access_users[] = $_POST['access_users'][$i];
-}
 ?>
 
-<!-- データベースに接続 -->
+<!-- team_tbに書き込むSQL文 -->
 <?php
 $dbh = connectDB();
 
 if ($dbh) {
-
-    // データベースへ書き込むSQL文
-    //access_usersはupdateステートメントのSET句に、JSON_ARRAY_APPEND関数を使って配列を追加
-    $sql = "UPDATE team_tb SET access_users = JSON_ARRAY_APPEND(access_users, '$', ?) WHERE team_name = ?";
-    $sth = $dbh->prepare($sql);
-    $sth->bindParam(" 1", $access_users, PDO::PARAM_STR); // " 1", $team_name, PDO::
-    $sth->bindParam(" 2", $team_name, PDO::PARAM_STR);
-    $sth->execute();
-    $row = $sth->fetch(PDO::FETCH_ASSOC);
-    if ($row["access_users"] == "[]") {
-        echo "チーム名またはアクセスユーザーを入力してください";
-    } else {
-        echo "チームを作成しました";
-    }
-
-
+    $sql = 'INSERT INTO `team_tb`(`team_name`)
+    VALUES("' . $team_name . '")';
+    $sth = $dbh->query($sql); //SQLの実行
+    //team_nameを書き込んだidを取得
+    $team_id = $dbh->lastInsertId();
+    $_SESSION['team_id'] = $team_id;
+} else {
+    echo 'DB接続に失敗しました。';
 }
 ?>
+
 
 <head>
     <meta charset="UTF-8">
@@ -88,6 +74,33 @@ if ($dbh) {
         <hr>
 
         ▪️チームを登録しました <br>
+        <div>
+            <h2>アカウント追加</h2>
+            <form action="insert_access_user_to_team.php" method="post">
+                <div class="form-group">
+                    <label for="access_users">アクセスユーザー</label><br>
+                    <!-- アクセス可能なユーザーをデータベースから選択、user_tbのフィールド「username」から選択できるようにする -->
+                    <?php
+                    // データベースに接続
+                    $dbh = connectDB();
+                    if ($dbh) {
+                        // データベースに接続成功
+                        //表示はusername、送信するものはid
+                        $sql = 'SELECT `id`,`username` FROM `user_tb`';
+                        $sth = $dbh->query($sql); //SQLの実行
+                        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($rows as $row) {
+                            echo '<input type="checkbox" name="access_users[]" value="' . $row['id'] . '">' . $row['username'] . '<br>';
+                        }
+                    } else {
+                        // データベースに接続失敗
+                        echo 'データベースに接続できません。';
+                    }
+                    ?>
+                    <button type="submit" class="btn btn-primary">アカウントを追加</button>
+                </div>
+            </form>
+        </div>
 
         <a class="btn btn-primary" href="show_message.php">メッセージを読む
         </a>
