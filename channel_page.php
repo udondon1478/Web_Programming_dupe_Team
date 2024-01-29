@@ -71,53 +71,68 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
             </nav>
         </div>
 
-        <?php
-        $sql = "INSERT INTO `post_tb` (`team_id`, `channel_id`, `user_id`, `name`, `title`, `content`, `created_at`) VALUES (:team_id, :channel_id, :user_id, :name, :title, :content, :created_at)";
-
-        $sth = $dbh->prepare($sql); //SQLの準備
-        $sth->bindValue(':team_id', $_SESSION['team_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
-        $sth->bindValue(':channel_id', $_SESSION['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
-        $sth->bindValue(':user_id', "1", PDO::PARAM_INT); //プレースホルダーに値をバインド
-        //user_idが1のusernameをuser_tbから取得
-        $sth->bindValue(':name', "udon", PDO::PARAM_STR);
-        $sth->bindValue(':title', "TEST", PDO::PARAM_STR); //プレースホルダーに値をバインド
-        $sth->bindValue(':content', "sampletext", PDO::PARAM_STR); //プレースホルダーに値をバインド
-        $sth->bindValue(':created_at', date('Y-m-d H:i:s'), PDO::PARAM_STR); //プレースホルダーに値をバインド
-        $sth->execute(); //SQLの実行
-        ?>
-
         <div class="show_post">
-            <h2>チャンネル:<?php echo $_SESSION['channel_name']; ?></h2>
+            <h2>チャンネル:</h2>
             <h2>メッセージ一覧</h2>
-            <!-- チャンネルidが1と一致するレコードを全て取得し、テーブルで表示 -->
+            <!--投稿一覧の表示-->
             <?php
-            $sql = "SELECT * FROM `post_tb` WHERE channel_id = :channel_id";
-            $sth = $dbh->prepare($sql); //SQLの準備
-            $sth->bindValue(':channel_id', $_SESSION['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
-            $sth->execute(); //SQLの実行
-            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-            foreach ($result as $row) {
-                echo '<p class="post">' . $row['name'] . ' :' . $row['id'] . '">' . $row['title'] . $row['content'] . '</p><br>';
+            if (isset($_GET['channel_id'])) {
+                //チャンネルIDが指定されている場合
+                $sql = "SELECT * FROM `post_tb` WHERE `channel_id` = :channel_id";
+                $sth = $dbh->prepare($sql); //SQLの準備
+                $sth->bindValue(':channel_id', $_GET['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
+                $sth->execute(); //SQLの実行
+                $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+                foreach ($result as $row) {
+                    echo '<div class="post">';
+                    echo '<div class="post-info">';
+                    echo '<span class="post-user">' . $row['name'] . '</span>';
+                    echo '<span class="post-date">' . $row['created_at'] . '</span>';
+                    echo '</div>';
+                    echo '<div class="post-content">';
+                    echo '<h3>' . $row['title'] . '</h3>';
+                    echo $row['content'];
+                    //返信ボタン
+                    echo '<a class="btn btn-primary" href="reply_page.php?post_id=' . $row['id'] . '">返信</a>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+                echo '<h2>投稿フォーム</h2>';
+                echo '<form action="channel_page.php?channel_id=' . $_GET['channel_id'] . '" method="get">';
+                echo '<input type="hidden" name="channel_id" value="' . $_GET['channel_id'] . '">';
+                echo '<input type="text" name="title" placeholder="タイトル"><br>';
+                echo '<textarea name="content"></textarea><br>';
+                echo '<input type="submit" value="投稿">';
+                echo '</form>';
             }
             ?>
+
         </div>
 
-        <div class="container">
-            <table class="table" border="1" id="all_show_result">
-                <thread>
-                    <tr bgcolor="#cccccc">
-                        <div class="prep">
-                            <th scope="col">ID</th>
-                            <th class="col">タイトル</th>
-                            <th class="col">メッセージ</th>
-                            <th class="col">ユーザ</th>
-                            <th class="col">投稿日時</th>
-                        </div>
-                    </tr>
-                </thread>
-            </table>
-            <hr>
-        </div>
+        <!--投稿の挿入-->
+        <?php
+        if (isset($_GET['channel_id']) && isset($_GET['content'])) {
+            //DBへの接続
+            $dbh = connectDB();
+            //データベースの接続確認
+            if (!$dbh) {
+                //接続できていない場合
+                echo 'DBに接続できていません';
+                exit();
+            }
+            //データベースへの問い合わせSQL文(文字列)
+            $sql = "INSERT INTO `post_tb` (`team_id`,`channel_id`,`user_id`,`name`,`title`,`content`) VALUES (:team_id,:channel_id,:user_id,:name,:title,:content)";
+            $sth = $dbh->prepare($sql); //SQLの準備
+            $sth->bindValue(':team_id', $_SESSION['team_id'], PDO::PARAM_INT); //値のバインド
+            $sth->bindValue(':channel_id', $_GET['channel_id'], PDO::PARAM_INT); //値のバインド
+            $sth->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT); //値のバインド
+            $sth->bindValue(':name', $_SESSION['name'], PDO::PARAM_STR); //値のバインド
+            $sth->bindValue(':title', $_GET['title'], PDO::PARAM_STR); //値のバインド
+            $sth->bindValue(':content', $_GET['content'], PDO::PARAM_STR); //値のバインド
+            $sth->execute(); //SQLの実行
+            echo '投稿しました';
+        }
+        ?>
 
         <div class="logout">
             <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
