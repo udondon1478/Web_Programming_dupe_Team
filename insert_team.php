@@ -99,6 +99,25 @@ if ($dbh) {
                     ?>
                     <button type="submit" class="btn btn-primary">アカウントを追加</button>
                 </div>
+
+                <div class="make_template">
+                    <?php
+                    // データベースに接続
+                    $dbh = connectDB();
+                    if ($dbh) {
+                        $sql = "INSERT INTO `channel_tb`(`channel_name`,`status`)
+                        VALUES('一般',TRUE)";
+                        $sth = $dbh->query($sql); //SQLの実行
+                    }
+
+                    // channel_tbの最新のidを取得し、team_channels_tbに紐づけ
+                    // team_idはteam_tbのid
+                    $channel_id = $dbh->lastInsertId();
+                    $sql = "INSERT INTO `team_channels_tb`(`team_id`,`channel_id`)
+                    VALUES('" . $_SESSION['team_id'] . "','" . $channel_id . "')";
+                    $sth = $dbh->query($sql); //SQLの実行
+                    ?>
+                </div>
             </form>
         </div>
 

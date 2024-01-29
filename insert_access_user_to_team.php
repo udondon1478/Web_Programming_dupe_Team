@@ -69,8 +69,8 @@ foreach ($user_id as $value) {
         
         ▪️アカウントを登録しました <br>
 
-        <h1>チャンネルの作成</h1>
-        
+        ▪️テンプレートチャンネルを作成しました
+
 
         <a class="btn btn-primary" href="show_message.php">メッセージを読む
         </a>

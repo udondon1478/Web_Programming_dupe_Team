@@ -53,9 +53,14 @@ $dbh->exec($sql);//SQLの実行
 echo "team_users_tbを作成しました<br>";
 
 //チャンネルテーブルの作成
-$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, `status` BOOLEAN DEFAULT TRUE);";    //status: 0=private, 1=public
+$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL, `status` BOOLEAN DEFAULT TRUE);";    //status: 0=private, 1=public
 $dbh->exec($sql);//SQLの実行
 echo "channel_tbを作成しました<br>";
+
+//チャンネルとチームの中間テーブルの作成
+$sql = "CREATE TABLE `team_channels_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`channel_id` INT NOT NULL,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`));";
+$dbh->exec($sql);//SQLの実行
+echo "team_channels_tbを作成しました<br>";
 
 //中間テーブルusers_channelsの作成
 //accessed_at: チャンネルに対してユーザーが最終アクセスをした日時
