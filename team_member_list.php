@@ -17,7 +17,6 @@ if ($dbh) {
     $buff = $sth->fetch(PDO::FETCH_ASSOC); //結果の取得
 }
 
-$_SESSION['team_id'] = $_GET['team_id'];
 ?>
 
 
@@ -70,37 +69,34 @@ $_SESSION['team_id'] = $_GET['team_id'];
                     <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
             </nav>
-
         </div>
 
-        <!-- channelを表示 -->
-        <div class="utilies">
-            <a href="create_channel_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チャンネルを作成</a>
-            <!-- アカウントをチームに追加-->
-            <a href="force_add_account_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントを追加</a>
-            <!-- メンバー一覧を表示 -->
-            <a href="team_member_list.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">メンバー一覧</a>
-            <!-- チームを削除 -->
-            <a href="delete_team_confirm.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チームを削除</a>
-            <h2>チャンネル一覧</h2>
-            <!-- channel_tbからchannel_nameを取得、リンク先はchannel_page.php -->
-            <!-- team_idが$_GET['team_id']と一致するレコード群の情報を取得 -->
-            <?php
-            $sql = 'SELECT * FROM `channel_tb` WHERE `team_id` = :team_id';
-            $sth = $dbh->prepare($sql); //SQLの準備
-            $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_STR); //プレースホルダーに値をバインド
-            $sth->execute(); //SQLの実行
+        <hr>
+        <!-- チームメンバーの一覧 -->
+        <h2>チームメンバーの一覧</h2>
+        <?php
+        //DBへの接続
+        $dbh = connectDB();
+        if ($dbh){
+            $sql = 'SELECT * FROM `team_users_tb` WHERE `team_id` = :team_id';
+            $sth = $dbh->prepare($sql);
+            $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_INT);
+            $sth->execute();
+            $result = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-            
+            $sql = 'SELECT * FROM `user_tb`';
+            $sth = $dbh->query($sql);
+            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-
-            foreach ($sth as $row) {
-                echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+            foreach ($result as $row) {
+                foreach ($result2 as $row2) {
+                    if ($row['user_id'] == $row2['id']) {
+                        echo $row2['username'] . '<br>';
+                    }
+                }
             }
-            ?>
-
-
-        </div>
+        }
+        ?>
 
         <div class="logout">
             <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
@@ -113,42 +109,3 @@ $_SESSION['team_id'] = $_GET['team_id'];
 </body>
 
 </html>
-
-<style>
-    /*リセットCSS*/
-    * {
-        font-weight: normal;
-    }
-
-    /* post_tbのcreated_atとusers_channelsのaccessed_atを比較 */
-    /* {channel_id}がcreated_at > accessed_at ならbtn_channel-[id]を太字に */
-    <?php
-    $sql = "SELECT * FROM `post_tb` WHERE `team_id` = :team_id";
-    $sth = $dbh->prepare($sql); //SQLの準備
-    $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
-    //$sth=$dbh->query($sql);の場合、SQL文の中で変数を使えないらしい
-    $sth->execute(); //SQLの実行
-    $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-    $sql = 'SELECT * FROM `users_channels` WHERE `user_id` = :user_id';
-    $sth = $dbh->prepare($sql); //SQLの準備
-    $sth->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
-    $sth->execute(); //SQLの実行
-    $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-    foreach ($result as $row) {
-        foreach ($result2 as $row2) {
-            //$rowのchannel_idと$row2のchannel_idが一致していてcreated_at > accessed_atならbtn_channel-[id]を太字に
-            if ($row['channel_id'] == $row2['channel_id'] && $row['created_at'] > $row2['accessed_at']) {
-                echo '.btn_channel-' . $row['channel_id'] . ' {font-weight: bold;}';
-            }
-        }
-    }
-    /*
-    if ($row['created_at'] > $row2['accessed_at']) {
-                echo '.btn_channel-' . $row['channel_id'] . ' {
-                    font-weight: 900;
-                }';
-            } */
-    ?>
-</style>
