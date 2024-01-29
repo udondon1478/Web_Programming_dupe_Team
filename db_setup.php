@@ -70,7 +70,7 @@ echo "users_channelsを作成しました<br>";
 
 //投稿テーブルの作成
 //ユーザー
-$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
+$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
 $dbh->exec($sql);//SQLの実行
 echo "post_tbを作成しました<br>";
 

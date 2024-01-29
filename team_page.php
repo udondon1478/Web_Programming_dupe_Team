@@ -53,13 +53,13 @@ if ($dbh) {
                     <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
                     <?php
                     if ($_SESSION['is_admin'] == 1) {
-                            
-                            echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
-                            
-                            echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                        }
-                        ?>
-                    
+
+                        echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
+
+                        //アカウント追加
+                        echo '<a class="nav-item nav-link" href="add_account.php">アカウントの追加</a> <br>';
+                    }
+                    ?>
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
                     <a class="nav-item nav-link" href="message.php">メッセージを書く</a> <br>
                     <a class="nav-item nav-link" href="show_message.php">メッセージを読む</a> <br>
@@ -71,21 +71,22 @@ if ($dbh) {
 
         </div>
 
-        <div class="team_grid container">
-            <h1>▪️チーム一覧 <br></h1>
-            <!--team_tbからteam_nameを取得、リンク先はteam_page.php-->
+        <!-- channelを表示 -->
+        <div class="channels">
+            <h2>チャンネル一覧</h2>
+            <!-- channel_tbからchannel_nameを取得、リンク先はchannel_page.php -->
             <?php
-            $sql = 'SELECT * FROM `team_tb`';
+            $sql = 'SELECT * FROM `channel_tb`';
             $sth = $dbh->query($sql); //SQLの実行
             $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
 
             foreach ($result as $row) {
-                echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a><br>';
 
+                echo '<a class="btn btn-primary" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
             }
             ?>
-        </div>
 
+        </div>
 
         <div class="logout">
             <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
@@ -93,7 +94,7 @@ if ($dbh) {
         <hr>
     </div>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 
