@@ -84,10 +84,10 @@ $_SESSION['team_id'] = $_GET['team_id'];
             $sth = $dbh->prepare($sql); //SQLの準備
             $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_STR); //プレースホルダーに値をバインド
             $sth->execute(); //SQLの実行
-            
+
 
             foreach ($sth as $row) {
-                echo '<a class="btn btn-primary btn_channel" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
             }
 
 
@@ -108,5 +108,39 @@ $_SESSION['team_id'] = $_GET['team_id'];
 </html>
 
 <style>
-    /*btn_channelが*/
+    /*リセットCSS*/
+    * {
+        font-weight: normal;
+    }
+    /* post_tbのcreated_atとusers_channelsのaccessed_atを比較 */
+    /* {channel_id}がcreated_at > accessed_at ならbtn_channel-[id]を太字に */
+    <?php
+    $sql = "SELECT * FROM `post_tb` WHERE `team_id` = :team_id";
+    $sth = $dbh->prepare($sql); //SQLの準備
+    $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
+    //$sth=$dbh->query($sql);の場合、SQL文の中で変数を使えないらしい
+    $sth->execute(); //SQLの実行
+    $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+
+    $sql = 'SELECT * FROM `users_channels` WHERE `user_id` = :user_id';
+    $sth = $dbh->prepare($sql); //SQLの準備
+    $sth->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
+    $sth->execute(); //SQLの実行
+    $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+
+    foreach ($result as $row) {
+        foreach ($result2 as $row2) {
+            //$rowのchannel_idと$row2のchannel_idが一致していてcreated_at > accessed_atならbtn_channel-[id]を太字に
+            if ($row['channel_id'] == $row2['channel_id'] && $row['created_at'] > $row2['accessed_at']) {
+                echo '.btn_channel-' . $row['channel_id'] . ' {font-weight: bold;}';
+            }
+        }
+    }
+    /*
+    if ($row['created_at'] > $row2['accessed_at']) {
+                echo '.btn_channel-' . $row['channel_id'] . ' {
+                    font-weight: 900;
+                }';
+            } */
+    ?>
 </style>

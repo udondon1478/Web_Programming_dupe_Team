@@ -50,6 +50,8 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
         <!-- ユーザーのチャンネルに対するアクセス日時を更新 -->
         <!-- 過去にアクセスしていなければINSERT、あればUPDATE -->
         <?php
+        date_default_timezone_set('Asia/Tokyo');
+
         //user_idが$_SESSION['user_id']とchannel_idが$_GET['channel_id']と一致するレコードが存在するかどうかの判定
         $sql = "SELECT * FROM `users_channels` WHERE `user_id` = :user_id AND `channel_id` = :channel_id";
         $sth = $dbh->prepare($sql);
@@ -57,8 +59,8 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
         $sth->bindValue(':channel_id', $_GET['channel_id'], PDO::PARAM_INT);
         $sth->execute();
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
-        
-        if(isset($rows[0])) {
+
+        if (isset($rows[0])) {
             $sql = "UPDATE `users_channels` SET `accessed_at` = :accessed_at WHERE `user_id` = :user_id AND `channel_id` = :channel_id";
             $sth = $dbh->prepare($sql);
             $sth->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
@@ -191,5 +193,4 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
         position: fixed;
         bottom: 0;
     }
-
 </style>
