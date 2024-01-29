@@ -20,9 +20,8 @@ if($dbh) {
     $sth = $dbh->prepare($sql); //SQLの準備
     $sth->bindValue(':channel_id', $_SESSION['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
     $sth->execute(); //SQLの実行
-    $res = $dbh->query($sql); //SQL文の実行
     //取得したデータを配列に格納
-    $data = $res->fetchAll(PDO::FETCH_ASSOC);
+    $data = $sth->fetchAll(PDO::FETCH_ASSOC);
 
     //ヘッダの指定でjsonの動作を安定させる
     header('Content-type: application/json');

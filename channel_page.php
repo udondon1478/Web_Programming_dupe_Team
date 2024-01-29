@@ -174,6 +174,24 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
         }
         ?>
 
+        <!--jsサンドボックス-->
+        <div class="container">
+            <table class="table" border="1" id="all_show_result">
+                <thread>
+                    <tr bgcolor="#cccccc">
+                        <div class="prep">
+                            <th scope="col">ID</th>
+                            <th class="col">タイトル</th>
+                            <th class="col">メッセージ</th>
+                            <th class="col">ユーザ</th>
+                            <th class="col">投稿日時</th>
+                        </div>
+                    </tr>
+                </thread>
+            </table>
+            <hr>
+        </div>
+
         <div class="logout">
             <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
         </div>
