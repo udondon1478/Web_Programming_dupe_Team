@@ -97,13 +97,21 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                     echo '</div>';
                     echo '</div>';
                 }
-                echo '<h2>投稿フォーム</h2>';
-                echo '<form action="channel_page.php?channel_id=' . $_GET['channel_id'] . '" method="get">';
-                echo '<input type="hidden" name="channel_id" value="' . $_GET['channel_id'] . '">';
-                echo '<input type="text" name="title" placeholder="タイトル"><br>';
-                echo '<textarea name="content"></textarea><br>';
-                echo '<input type="submit" value="投稿">';
-                echo '</form>';
+            ?>
+                <div class="send_form">
+
+                    <?php
+                    echo '<h2>投稿フォーム</h2>';
+                    echo '<form action="channel_page.php?channel_id=' . $_GET['channel_id'] . '" method="get">';
+                    echo '<input type="hidden" name="channel_id" value="' . $_GET['channel_id'] . '">';
+                    echo '<input type="text" name="title" placeholder="タイトル"><br>';
+                    echo '<textarea name="content"></textarea><br>';
+                    echo '<input type="submit" value="投稿">';
+                    echo '</form>';
+                    ?>
+                </div>
+
+            <?php
             }
             ?>
 
@@ -131,6 +139,8 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
             $sth->bindValue(':content', $_GET['content'], PDO::PARAM_STR); //値のバインド
             $sth->execute(); //SQLの実行
             echo '投稿しました';
+            //再読み込み
+            header('location: channel_page.php?channel_id=' . $_GET['channel_id']);
         }
         ?>
 
@@ -147,3 +157,10 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
 </body>
 
 </html>
+
+<style>
+    .send_form {
+        position: fixed;
+        bottom: 0;
+    }
+</style>

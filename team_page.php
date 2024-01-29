@@ -87,7 +87,7 @@ $_SESSION['team_id'] = $_GET['team_id'];
             
 
             foreach ($sth as $row) {
-                echo '<a class="btn btn-primary" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                echo '<a class="btn btn-primary btn_channel" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
             }
 
 
@@ -106,3 +106,7 @@ $_SESSION['team_id'] = $_GET['team_id'];
 </body>
 
 </html>
+
+<style>
+    /*btn_channelが*/
+</style>

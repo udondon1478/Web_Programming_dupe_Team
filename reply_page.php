@@ -112,12 +112,21 @@ if ($dbh) {
                         echo '</div>';
                         echo '</div>';
                     }
-                    echo '<h2>返信フォーム</h2>';
-                    echo '<form action="reply_page.php?post_id=' . $_GET['post_id'] . '" method="get">';
-                    echo '<input type="hidden" name="post_id" value="' . $_GET['post_id'] . '">';
-                    echo '<textarea name="content"></textarea><br>';
-                    echo '<input type="submit" value="投稿">';
-                    echo '</form>';
+                ?>
+
+                    <div class="send_form">
+
+                        <?php
+                        echo '<h2>返信フォーム</h2>';
+                        echo '<form action="reply_page.php?post_id=' . $_GET['post_id'] . '" method="get">';
+                        echo '<input type="hidden" name="post_id" value="' . $_GET['post_id'] . '">';
+                        echo '<textarea name="content"></textarea><br>';
+                        echo '<input type="submit" value="投稿">';
+                        echo '</form>';
+                        ?>
+                    </div>
+
+                <?php
                 }
                 ?>
 
@@ -143,6 +152,8 @@ if ($dbh) {
                 $sth->bindValue(':content', $_GET['content'], PDO::PARAM_STR); //値のバインド
                 $sth->execute(); //SQLの実行
                 echo '投稿しました';
+                //再読み込み
+                header('location: reply_page.php?post_id=' . $_GET['post_id']);
             }
             ?>
 
@@ -159,3 +170,10 @@ if ($dbh) {
 </body>
 
 </html>
+
+<style>
+    .send_form {
+        position: fixed;
+        bottom: 0;
+    }
+</style>
