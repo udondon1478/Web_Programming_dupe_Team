@@ -47,6 +47,34 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
             </div>
         </div>
 
+        <!-- ユーザーのチャンネルに対するアクセス日時を更新 -->
+        <!-- 過去にアクセスしていなければINSERT、あればUPDATE -->
+        <?php
+        //user_idが$_SESSION['user_id']とchannel_idが$_GET['channel_id']と一致するレコードが存在するかどうかの判定
+        $sql = "SELECT * FROM `users_channels` WHERE `user_id` = :user_id AND `channel_id` = :channel_id";
+        $sth = $dbh->prepare($sql);
+        $sth->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
+        $sth->bindValue(':channel_id', $_GET['channel_id'], PDO::PARAM_INT);
+        $sth->execute();
+        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        
+        if(isset($rows[0])) {
+            $sql = "UPDATE `users_channels` SET `accessed_at` = :accessed_at WHERE `user_id` = :user_id AND `channel_id` = :channel_id";
+            $sth = $dbh->prepare($sql);
+            $sth->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
+            $sth->bindValue(':channel_id', $_GET['channel_id'], PDO::PARAM_INT);
+            $sth->bindValue(':accessed_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+            $sth->execute();
+        } else {
+            $sql = "INSERT INTO `users_channels` (`user_id`, `channel_id`, `accessed_at`) VALUES (:user_id, :channel_id, :accessed_at)";
+            $sth = $dbh->prepare($sql);
+            $sth->bindValue(':user_id', $_SESSION['id'], PDO::PARAM_INT);
+            $sth->bindValue(':channel_id', $_GET['channel_id'], PDO::PARAM_INT);
+            $sth->bindValue(':accessed_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+            $sth->execute();
+        }
+        ?>
+
         <div class="menu container">
             <h1>▪️掲示板メニュー <br></h1>
             <nav class="navbar navbar-expand-sm">
@@ -78,7 +106,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
             <?php
             if (isset($_GET['channel_id'])) {
                 //チャンネルIDが指定されている場合
-                $sql = "SELECT * FROM `post_tb` WHERE `channel_id` = :channel_id";
+                $sql = "SELECT * FROM `post_tb` WHERE `channel_id` = :channel_id ORDER BY `created_at` DESC";
                 $sth = $dbh->prepare($sql); //SQLの準備
                 $sth->bindValue(':channel_id', $_GET['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
                 $sth->execute(); //SQLの実行
@@ -163,4 +191,5 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
         position: fixed;
         bottom: 0;
     }
+
 </style>
