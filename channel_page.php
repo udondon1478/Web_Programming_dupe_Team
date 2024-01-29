@@ -132,10 +132,11 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
 
                     <?php
                     echo '<h2>投稿フォーム</h2>';
-                    echo '<form action="channel_page.php?channel_id=' . $_GET['channel_id'] . '" method="get">';
+                    echo '<form action="channel_page.php?channel_id=' . $_GET['channel_id'] . '" method="get" enctype="multipart/form-data">';
                     echo '<input type="hidden" name="channel_id" value="' . $_GET['channel_id'] . '">';
                     echo '<input type="text" name="title" placeholder="タイトル"><br>';
                     echo '<textarea name="content"></textarea><br>';
+                    echo '<input type="file" name="file"><br>';
                     echo '<input type="submit" value="投稿">';
                     echo '</form>';
                     ?>
@@ -158,6 +159,19 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                 echo 'DBに接続できていません';
                 exit();
             }
+
+            //getメソッドからファイルをアップロード
+            if (isset($_FILES['file'])) {
+                $file = $_FILES['file'];
+                $fileName = $_FILES['file']['name'];
+                $fileType = $_FILES['file']['type'];
+                $fileTmpName = $_FILES['file']['tmp_name'];
+                $fileError = $_FILES['file']['error'];
+                $fileSize = $_FILES['file']['size'];
+            }
+            
+
+
             //データベースへの問い合わせSQL文(文字列)
             $sql = "INSERT INTO `post_tb` (`team_id`,`channel_id`,`user_id`,`name`,`title`,`content`) VALUES (:team_id,:channel_id,:user_id,:name,:title,:content)";
             $sth = $dbh->prepare($sql); //SQLの準備
@@ -170,7 +184,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
             $sth->execute(); //SQLの実行
             echo '投稿しました';
             //再読み込み
-            header('location: channel_page.php?channel_id=' . $_GET['channel_id']);
+            
         }
         ?>
 

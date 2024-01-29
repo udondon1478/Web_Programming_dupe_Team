@@ -74,8 +74,11 @@ $_SESSION['team_id'] = $_GET['team_id'];
         </div>
 
         <!-- channelを表示 -->
-        <div class="channels">
+        <div class="utilies">
             <a href="create_channel_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チャンネルを作成</a>
+            <!-- アカウントをチームに追加-->
+            <a href="force_add_account_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントを追加</a>
+
             <h2>チャンネル一覧</h2>
             <!-- channel_tbからchannel_nameを取得、リンク先はchannel_page.php -->
             <!-- team_idが$_GET['team_id']と一致するレコード群の情報を取得 -->
@@ -89,9 +92,8 @@ $_SESSION['team_id'] = $_GET['team_id'];
             foreach ($sth as $row) {
                 echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
             }
-
-
             ?>
+
 
         </div>
 
@@ -112,6 +114,7 @@ $_SESSION['team_id'] = $_GET['team_id'];
     * {
         font-weight: normal;
     }
+
     /* post_tbのcreated_atとusers_channelsのaccessed_atを比較 */
     /* {channel_id}がcreated_at > accessed_at ならbtn_channel-[id]を太字に */
     <?php
