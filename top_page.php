@@ -79,8 +79,16 @@ if ($dbh) {
             $sth = $dbh->query($sql); //SQLの実行
             $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
 
+            $sql = 'SELECT * FROM `team_users_tb`';
+            $sth = $dbh->query($sql); //SQLの実行
+            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+
             foreach ($result as $row) {
-                echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a><br>';
+                foreach ($result2 as $row2) {
+                    if ($_SESSION['id'] == $row2['user_id'] && $row['id'] == $row2['team_id']) {
+                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a><br>';
+                    }
+                }
 
             }
             ?>

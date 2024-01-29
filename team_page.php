@@ -88,6 +88,8 @@ $_SESSION['team_id'] = $_GET['team_id'];
             $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_STR); //プレースホルダーに値をバインド
             $sth->execute(); //SQLの実行
 
+            
+
 
             foreach ($sth as $row) {
                 echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
