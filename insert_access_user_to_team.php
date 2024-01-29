@@ -20,11 +20,12 @@ $user_id = $_POST['access_users'];
 $dbh = connectDB();
 
 //別々のレコードに対してINSERT
+
 foreach ($user_id as $value) {
-    $sql = 'INSERT INTO `team_user_tb`(`team_id`,`user_id`)
+    $sql = 'INSERT INTO `team_users_tb`(`team_id`,`user_id`)
     VALUES("' . $team_id . '","' . $value . '")';
+    $sth = $dbh->query($sql); //SQLの実行
 }
-$sth = $dbh->query($sql); //SQLの実行
 ?>
 
 <!DOCTYPE html>
@@ -65,14 +66,11 @@ $sth = $dbh->query($sql); //SQLの実行
         </div>
 
         <hr>
-
-        <!-- user_idを全て出力する -->
-        <?php
-        foreach ($user_id as $user_id) {
-            echo $user_id . '<br>';
-        }
-        ?>
+        
         ▪️アカウントを登録しました <br>
+
+        <h1>チャンネルの作成</h1>
+        
 
         <a class="btn btn-primary" href="show_message.php">メッセージを読む
         </a>

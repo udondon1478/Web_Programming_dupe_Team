@@ -84,7 +84,8 @@ if ($dbh) {
                     <label for="access_users">アクセスユーザー</label><br>
                     <!-- アクセス可能なユーザーをデータベースから選択、user_tbのフィールド「username」から選択できるようにする -->
                     <!-- JSONでの複数保存、一番めんどくさそうな部分、notionの設計図を確認 -->
-                    <?php
+
+                    <!--
                     // データベースに接続
                     $dbh = connectDB();
                     if ($dbh) {
@@ -100,7 +101,8 @@ if ($dbh) {
                         // データベースに接続失敗
                         echo 'データベースに接続できません。';
                     }
-                    ?>
+                -->
+
                     <button type="submit" class="btn btn-primary">作成</button>
                 </div>
         </div>
