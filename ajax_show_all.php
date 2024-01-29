@@ -11,12 +11,15 @@ if (!((isset($_SESSION['login']) && $_SESSION['login'] == 'OK'))) {
 require_once(__DIR__ . '/functions.php');
 
 //リンクから受け取ったメッセージID
-$team_id = $_GET['team_id'];
 
+$teamId = 1;
 $dbh = connectDB(); //DBへの接続
 if($dbh) {
     //データベースへの問い合わせSQL文(文字列)
-    //post_tbの
+    $sql = "SELECT * FROM `post_tb` WHERE channel_id = :channel_id";
+    $sth = $dbh->prepare($sql); //SQLの準備
+    $sth->bindValue(':channel_id', $_SESSION['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
+    $sth->execute(); //SQLの実行
     $res = $dbh->query($sql); //SQL文の実行
     //取得したデータを配列に格納
     $data = $res->fetchAll(PDO::FETCH_ASSOC);

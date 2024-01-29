@@ -16,8 +16,7 @@ if ($dbh) {
     $sth->execute(); //SQLの実行
     $buff = $sth->fetch(PDO::FETCH_ASSOC); //結果の取得
 }
-
-$_SESSION['team_id'] = $_GET['team_id'];
+$_SESSION['channel_id'] = $_GET['channel_id'];
 ?>
 
 
@@ -70,29 +69,54 @@ $_SESSION['team_id'] = $_GET['team_id'];
                     <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
             </nav>
-
         </div>
 
-        <!-- channelを表示 -->
-        <div class="channels">
-            <a href="create_channel_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チャンネルを作成</a>
-            <h2>チャンネル一覧</h2>
-            <!-- channel_tbからchannel_nameを取得、リンク先はchannel_page.php -->
-            <!-- team_idが$_GET['team_id']と一致するレコード群の情報を取得 -->
+        <?php
+        $sql = "INSERT INTO `post_tb` (`team_id`, `channel_id`, `user_id`, `name`, `title`, `content`, `created_at`) VALUES (:team_id, :channel_id, :user_id, :name, :title, :content, :created_at)";
+
+        $sth = $dbh->prepare($sql); //SQLの準備
+        $sth->bindValue(':team_id', $_SESSION['team_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
+        $sth->bindValue(':channel_id', $_SESSION['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
+        $sth->bindValue(':user_id', "1", PDO::PARAM_INT); //プレースホルダーに値をバインド
+        //user_idが1のusernameをuser_tbから取得
+        $sth->bindValue(':name', "udon", PDO::PARAM_STR);
+        $sth->bindValue(':title', "TEST", PDO::PARAM_STR); //プレースホルダーに値をバインド
+        $sth->bindValue(':content', "sampletext", PDO::PARAM_STR); //プレースホルダーに値をバインド
+        $sth->bindValue(':created_at', date('Y-m-d H:i:s'), PDO::PARAM_STR); //プレースホルダーに値をバインド
+        $sth->execute(); //SQLの実行
+        ?>
+
+        <div class="show_post">
+            <h2>チャンネル:<?php echo $_SESSION['channel_name']; ?></h2>
+            <h2>メッセージ一覧</h2>
+            <!-- チャンネルidが1と一致するレコードを全て取得し、テーブルで表示 -->
             <?php
-            $sql = 'SELECT * FROM `channel_tb` WHERE `team_id` = :team_id';
+            $sql = "SELECT * FROM `post_tb` WHERE channel_id = :channel_id";
             $sth = $dbh->prepare($sql); //SQLの準備
-            $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_STR); //プレースホルダーに値をバインド
+            $sth->bindValue(':channel_id', $_SESSION['channel_id'], PDO::PARAM_INT); //プレースホルダーに値をバインド
             $sth->execute(); //SQLの実行
-            
-
-            foreach ($sth as $row) {
-                echo '<a class="btn btn-primary" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+            foreach ($result as $row) {
+                echo '<p class="post">' . $row['name'] . ' :' . $row['id'] . '">' . $row['title'] . $row['content'] . '</p><br>';
             }
-
-
             ?>
+        </div>
 
+        <div class="container">
+            <table class="table" border="1" id="all_show_result">
+                <thread>
+                    <tr bgcolor="#cccccc">
+                        <div class="prep">
+                            <th scope="col">ID</th>
+                            <th class="col">タイトル</th>
+                            <th class="col">メッセージ</th>
+                            <th class="col">ユーザ</th>
+                            <th class="col">投稿日時</th>
+                        </div>
+                    </tr>
+                </thread>
+            </table>
+            <hr>
         </div>
 
         <div class="logout">
@@ -103,6 +127,8 @@ $_SESSION['team_id'] = $_GET['team_id'];
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="js/get_post.js"></script>
 </body>
 
 </html>

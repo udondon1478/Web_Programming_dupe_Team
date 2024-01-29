@@ -105,8 +105,8 @@ if ($dbh) {
                     // データベースに接続
                     $dbh = connectDB();
                     if ($dbh) {
-                        $sql = "INSERT INTO `channel_tb`(`channel_name`,`status`)
-                        VALUES('一般',TRUE)";
+                        $sql = "INSERT INTO `channel_tb`(`team_id`,`channel_name`,`status`)
+                        VALUES('" . $_SESSION['team_id'] . "','" . "雑談" . "','1')";
                         $sth = $dbh->query($sql); //SQLの実行
                     }
 

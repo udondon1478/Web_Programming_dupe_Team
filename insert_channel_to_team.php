@@ -8,6 +8,20 @@ if (!(isset($_SESSION['login']) && $_SESSION['login'] == 'OK')) {
 require_once(__DIR__ . '/functions.php');
 ?>
 
+<!-- channel_tbに書き込むSQL文 -->
+<?php
+$dbh = connectDB();
+
+if ($dbh) {
+    $sql = 'INSERT INTO `channel_tb`(`team_id`,`channel_name`,`status`)
+    VALUES("' . $_POST['team_id'] . '","' . $_POST['channel_name'] . '","' . $_POST['status'] . '")';
+    $sth = $dbh->query($sql); //SQLの実行
+} else {
+    echo 'DB接続に失敗しました。';
+}
+?>
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,26 +57,8 @@ require_once(__DIR__ . '/functions.php');
         </div>
 
         <hr>
-        
-        <div>
-            <h2>チャンネル作成</h2>
-            <form action="insert_channel_to_team.php" method="post">
-                <div class="form-group">
-                    <form action="insert_channel_to_team.php" method="post">
-                        <div class="form-group">
-                            <!-- team_idを渡す -->
-                            <input type="hidden" class="form-control" id="team_id" name="team_id" value="<?php echo $_GET['team_id']; ?>">
 
-                            <label for="channel_name">チャンネル名</label>
-                            <input type="text" class="form-control" id="channel_name" name="channel_name">
-                            <label for="status">公開状態の選択</label>
-                            <input type="radio" name="status" value="1">公開
-                            <input type="radio" name="status" value="0">非公開
-                            <button type="submit" class="btn btn-primary">作成</button>
-                    </form>
-                </div>
-            </form>
-        </div>
+        ▪️チャンネルを登録しました <br>
 
         <a class="btn btn-primary" href="show_message.php">メッセージを読む
         </a>
