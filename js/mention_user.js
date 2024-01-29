@@ -4,25 +4,29 @@ var form = document.getElementById("form");
 // ユーザー名の候補を格納する配列を作成する
 var candidates = [];
 
-// user_tbのusernameから候補を取得する関数を定義する
+// user_tbのusernameから候補を取得する関数
 function getCandidates() {
   // Ajaxを使ってサーバーにリクエストを送る
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "get_candidates.php", true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      // レスポンスをJSON形式でパースする
-      var data = JSON.parse(xhr.responseText);
-      // 配列に候補を追加する
-      for (var i = 0; i < data.length; i++) {
-        candidates.push(data[i].username);
-      }
+  $.ajax({
+    url: "ajax_get_candidates.php",
+  }).then(
+    // 成功時
+    function (data) {
+      console.log("候補取得用通信成功");
+      // ユーザー名の候補を配列に格納する
+      candidates = data;
+    },
+    // 失敗時
+    function (XMLHttpRequest, textStatus, errorThrown) {
+      console.log("候補取得用通信失敗");
+      console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+      console.log("textStatus     : " + textStatus);
+      console.log("errorThrown    : " + errorThrown.message);
     }
-  };
-  xhr.send();
+  );
 }
 
-// フォームに入力された文字列を取得する関数を定義する
+// フォームに入力された文字列を取得する関数
 function getInput() {
   // フォームの値を取得する
   var input = form.value;
@@ -35,13 +39,13 @@ function getInput() {
   }
 }
 
-// 候補を表示する関数を定義する
+// 候補を表示する関数
 function showCandidates(query) {
-  // 候補を表示する要素を取得する
+  // 候補を表示する要素を取得
   var list = document.getElementById("list");
   // 候補を表示する要素を空にする
   list.innerHTML = "";
-  // 候補の配列をループする
+  // 候補の配列をループ
   for (var i = 0; i < candidates.length; i++) {
     // 候補がクエリに一致するかチェックする
     if (candidates[i].startsWith(query)) {

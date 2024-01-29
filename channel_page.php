@@ -121,7 +121,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                     echo '</div>';
                     echo '<div class="post-content">';
                     echo '<h3>' . $row['title'] . '</h3>';
-                    echo $row['content'];
+                    echo '<p>' . $row['content'] . '</p>';
                     //返信ボタン
                     echo '<a class="btn btn-primary" href="reply_page.php?post_id=' . $row['id'] . '">返信</a>';
                     echo '</div>';
@@ -198,7 +198,17 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
         <hr>
     </div>
 
+    <script>
+        // @ からスペースまでの文字列に span タグを付ける関数
+        function addSpan(str) {
+            return str.replace(/@[^ ]+/g, '<span class="mention">$&</span>');
+        }
 
+        // p タグの中身を取得して関数を適用する
+        var p = document.querySelector("p");
+        p.innerHTML = addSpan(p.innerHTML);
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="js/get_post.js"></script>
@@ -210,5 +220,9 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
     .send_form {
         position: fixed;
         bottom: 0;
+    }
+
+    .mention {
+        color: red;
     }
 </style>
