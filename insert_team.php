@@ -63,15 +63,6 @@ if ($dbh) {
             </div>
         </div>
 
-        <div class="navbar navbar-expand-sm">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="top_page.php">【メニュー】</a>
-                <a class="nav-item nav-link" href="logout.php">【ログアウト】</a> <br>
-            </div>
-
-        </div>
-
-        <hr>
 
         ▪️チームを登録しました <br>
         <div>
@@ -90,7 +81,8 @@ if ($dbh) {
                         $sth = $dbh->query($sql); //SQLの実行
                         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($rows as $row) {
-                            echo '<input type="checkbox" name="access_users[]" value="' . $row['id'] . '">' . $row['username'] . '<br>';
+                            //チームの所有者かどうかとユーザーを追加するかどうかを選択
+                            echo '<input type="checkbox" name="access_users[]" value="' . $row['id'] . '">' . $row['username'] . '<input type="checkbox" name="is_owner[]" value="' . true . '">' . 'チームの所有者' . '<br>';
                         }
                     } else {
                         // データベースに接続失敗

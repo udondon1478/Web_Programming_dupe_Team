@@ -52,21 +52,14 @@ $_SESSION['team_id'] = $_GET['team_id'];
             <h1>▪️掲示板メニュー <br></h1>
             <nav class="navbar navbar-expand-sm">
                 <div class="navbar-nav">
-                    <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
+                    
                     <?php
-                    if ($_SESSION['is_admin'] == 1) {
-
-                        echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
-
-                        //アカウント追加
-                        echo '<a class="nav-item nav-link" href="add_account.php">アカウントの追加</a> <br>';
-                    }
+                    
+                        echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
+                    
                     ?>
+
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
-                    <a class="nav-item nav-link" href="message.php">メッセージを書く</a> <br>
-                    <a class="nav-item nav-link" href="show_message.php">メッセージを読む</a> <br>
-                    <a class="nav-item nav-link" href="search_message.php">メッセージを探す</a> <br>
-                    <a class="nav-item nav-link" href="account_list.php">アカウント一覧</a> <br>
                     <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
             </nav>
@@ -91,7 +84,7 @@ $_SESSION['team_id'] = $_GET['team_id'];
             $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_STR); //プレースホルダーに値をバインド
             $sth->execute(); //SQLの実行
 
-            
+
 
 
             foreach ($sth as $row) {

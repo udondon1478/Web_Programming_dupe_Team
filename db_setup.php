@@ -48,7 +48,7 @@ $dbh->exec($sql);//SQLの実行
 echo "team_tbを作成しました<br>";
 
 //チームメンバー中間テーブルの作成
-$sql = "CREATE TABLE `team_users_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`user_id` INT NOT NULL,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
+$sql = "CREATE TABLE `team_users_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`user_id` INT NOT NULL,`is_owner` BOOLEAN DEFAULT FALSE,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
 $dbh->exec($sql);//SQLの実行
 echo "team_users_tbを作成しました<br>";
 

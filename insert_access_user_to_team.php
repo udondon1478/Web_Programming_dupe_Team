@@ -13,6 +13,15 @@ require_once(__DIR__ . '/functions.php');
 //name="access_users"は配列
 $team_id = $_SESSION['team_id'];
 $user_id = $_POST['access_users'];
+$is_owner = $_POST['is_owner'];
+$count = count($is_owner);
+for ($i = 0; $i<$count; $i++){
+    if(is_null($is_owner[$i])){
+        $is_owner[$i] = 0;
+    }else{
+        $is_owner[$i] = 1;
+    }
+}
 ?>
 
 <?php
@@ -21,10 +30,26 @@ $dbh = connectDB();
 
 //別々のレコードに対してINSERT
 
-foreach ($user_id as $value) {
-    $sql = 'INSERT INTO `team_users_tb`(`team_id`,`user_id`)
-    VALUES("' . $team_id . '","' . $value . '")';
-    $sth = $dbh->query($sql); //SQLの実行
+if(isset($is_owner)){
+    $count = count($user_id);
+    for ($i = 0; $i < $count; $i++) {
+        $value = $user_id[$i];
+        $owner = $is_owner[$i];
+        $sql = "INSERT INTO `team_users_tb` (`team_id`, `user_id`, `is_owner`) VALUES (:team_id, :user_id, :is_owner)";
+        $sth = $dbh->prepare($sql);
+        $sth->bindValue(':team_id', $team_id, PDO::PARAM_INT);
+        $sth->bindValue(':user_id', $value, PDO::PARAM_INT);
+        $sth->bindValue(':is_owner', $owner, PDO::PARAM_INT);
+        $sth->execute();
+    }
+}else{
+    foreach ($user_id as $value){
+        $sql = "INSERT INTO `team_users_tb` (`team_id`, `user_id`) VALUES (:team_id, :user_id)";
+        $sth = $dbh->prepare($sql);
+        $sth->bindValue(':team_id', $team_id, PDO::PARAM_INT);
+        $sth->bindValue(':user_id', $value, PDO::PARAM_INT);
+        $sth->execute();
+    }
 }
 ?>
 
@@ -70,10 +95,6 @@ foreach ($user_id as $value) {
         ▪️アカウントを登録しました <br>
 
         ▪️テンプレートチャンネルを作成しました
-
-
-        <a class="btn btn-primary" href="show_message.php">メッセージを読む
-        </a>
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

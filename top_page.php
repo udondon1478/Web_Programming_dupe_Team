@@ -54,17 +54,13 @@ if ($dbh) {
                     <?php
                     if ($_SESSION['is_admin'] == 1) {
                             
-                            echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
+                            
                             
                             echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
                         }
                         ?>
                     
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
-                    <a class="nav-item nav-link" href="message.php">メッセージを書く</a> <br>
-                    <a class="nav-item nav-link" href="show_message.php">メッセージを読む</a> <br>
-                    <a class="nav-item nav-link" href="search_message.php">メッセージを探す</a> <br>
-                    <a class="nav-item nav-link" href="account_list.php">アカウント一覧</a> <br>
                     <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
             </nav>
