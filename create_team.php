@@ -46,48 +46,43 @@ if ($dbh) {
             </div>
         </div>
 
-        <div class="menu container">
-            <h1>▪️掲示板メニュー <br></h1>
-            <nav class="navbar navbar-expand-sm">
-                <div class="navbar-nav">
-                    <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
-                    <?php
-                    if ($_SESSION['is_admin'] == 1) {
-                            
-                            
-                            
-                            echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                        }
-                        ?>
-                    
-                    <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
-                    <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
+        <!-- 条件参照用メモ -->
+        <!-- 適宜notionの設計図を確認すべし -->
+        <!-- 管理者権限は関係なし -->
+        <!-- データベース「team_tb」にチームを追加 -->
+        <!-- フィールドの項目は「team_name」「access_users」 -->
+        <div>
+            <h2>チーム作成</h2>
+            <form action="insert_team.php" method="post">
+                <div class="form-group">
+                    <label for="team_name">チーム名</label>
+                    <input type="text" class="form-control" id="team_name" name="team_name" placeholder="チーム名を入力してください">
                 </div>
-            </nav>
+                <div class="form-group">
+                    
+                    <!-- アクセス可能なユーザーをデータベースから選択、user_tbのフィールド「username」から選択できるようにする -->
+                    <!-- JSONでの複数保存、一番めんどくさそうな部分、notionの設計図を確認 -->
 
-        </div>
-
-        <div class="team_grid container">
-            <h1>▪️チーム一覧 <br></h1>
-            <!--team_tbからteam_nameを取得、リンク先はteam_page.php-->
-            <?php
-            $sql = 'SELECT * FROM `team_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-            $sql = 'SELECT * FROM `team_users_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-            foreach ($result as $row) {
-                foreach ($result2 as $row2) {
-                    if ($_SESSION['id'] == $row2['user_id'] && $row['id'] == $row2['team_id']) {
-                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a><br>';
+                    <!--
+                    // データベースに接続
+                    $dbh = connectDB();
+                    if ($dbh) {
+                        // データベースに接続成功
+                        $sql = 'SELECT username FROM user_tb';
+                        $sth = $dbh->prepare($sql);
+                        $sth->execute();
+                        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($rows as $row) {
+                            echo '<input type="checkbox" name="access_users[]" value="' . $row['username'] . '">' . $row['username'] . '<br>';
+                        }
+                    } else {
+                        // データベースに接続失敗
+                        echo 'データベースに接続できません。';
                     }
-                }
+                -->
 
-            }
-            ?>
+                    <button type="submit" class="btn btn-primary">作成</button>
+                </div>
         </div>
 
 
@@ -97,7 +92,7 @@ if ($dbh) {
         <hr>
     </div>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 

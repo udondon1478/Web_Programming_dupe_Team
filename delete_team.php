@@ -6,15 +6,23 @@ if (!(isset($_SESSION['login']) && $_SESSION['login'] == 'OK')) {
 }
 //接続用関数の呼び出し
 require_once(__DIR__ . '/functions.php');
-//DBへの接続
+
+?>
+
+<!--team_tb内の一致するレコードを削除-->
+<?php
+
 $dbh = connectDB();
 if ($dbh) {
-    //「user_name」が$_SESSION['name']と一致するレコード群の情報を取得
-    $sql = 'SELECT `is_admin` FROM `user_tb` WHERE `username` = :user_name';
-    $sth = $dbh->prepare($sql); //SQLの準備
-    $sth->bindValue(':user_name', $_SESSION['name'], PDO::PARAM_STR); //プレースホルダーに値をバインド
-    $sth->execute(); //SQLの実行
-    $buff = $sth->fetch(PDO::FETCH_ASSOC); //結果の取得
+    //外部キー制約を一時的に無効にする
+    $dbh->exec('SET foreign_key_checks=0;');
+    $team_id = $_SESSION['team_id'];
+    $sql = 'DELETE FROM `team_tb` WHERE id = :team_id';
+    $sth = $dbh->prepare($sql);
+    $sth->bindValue(':team_id', $team_id, PDO::PARAM_INT);
+    $sth->execute();
+} else {
+    echo 'DB接続に失敗しました。';
 }
 ?>
 
@@ -53,43 +61,22 @@ if ($dbh) {
                     <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
                     <?php
                     if ($_SESSION['is_admin'] == 1) {
-                            
-                            
-                            
-                            echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                        }
-                        ?>
-                    
+
+                        echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
+
+                        //アカウント追加
+                        echo '<a class="nav-item nav-link" href="add_account.php">アカウントの追加</a> <br>';
+                    }
+                    ?>
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
+                    <a class="nav-item nav-link" href="message.php">メッセージを書く</a> <br>
+                    <a class="nav-item nav-link" href="show_message.php">メッセージを読む</a> <br>
+                    <a class="nav-item nav-link" href="search_message.php">メッセージを探す</a> <br>
+                    <a class="nav-item nav-link" href="account_list.php">アカウント一覧</a> <br>
                     <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
             </nav>
-
         </div>
-
-        <div class="team_grid container">
-            <h1>▪️チーム一覧 <br></h1>
-            <!--team_tbからteam_nameを取得、リンク先はteam_page.php-->
-            <?php
-            $sql = 'SELECT * FROM `team_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-            $sql = 'SELECT * FROM `team_users_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-            foreach ($result as $row) {
-                foreach ($result2 as $row2) {
-                    if ($_SESSION['id'] == $row2['user_id'] && $row['id'] == $row2['team_id']) {
-                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a><br>';
-                    }
-                }
-
-            }
-            ?>
-        </div>
-
 
         <div class="logout">
             <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
@@ -97,7 +84,7 @@ if ($dbh) {
         <hr>
     </div>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 

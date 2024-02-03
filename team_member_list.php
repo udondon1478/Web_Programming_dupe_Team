@@ -16,6 +16,7 @@ if ($dbh) {
     $sth->execute(); //SQLの実行
     $buff = $sth->fetch(PDO::FETCH_ASSOC); //結果の取得
 }
+
 ?>
 
 
@@ -50,46 +51,39 @@ if ($dbh) {
             <h1>▪️掲示板メニュー <br></h1>
             <nav class="navbar navbar-expand-sm">
                 <div class="navbar-nav">
-                    <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
-                    <?php
-                    if ($_SESSION['is_admin'] == 1) {
-                            
-                            
-                            
-                            echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                        }
-                        ?>
-                    
+
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
-                    <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
+                    
                 </div>
             </nav>
-
         </div>
 
-        <div class="team_grid container">
-            <h1>▪️チーム一覧 <br></h1>
-            <!--team_tbからteam_nameを取得、リンク先はteam_page.php-->
-            <?php
-            $sql = 'SELECT * FROM `team_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+        <hr>
+        <!-- チームメンバーの一覧 -->
+        <h2>チームメンバーの一覧</h2>
+        <?php
+        //DBへの接続
+        $dbh = connectDB();
+        if ($dbh){
+            $sql = 'SELECT * FROM `team_users_tb` WHERE `team_id` = :team_id';
+            $sth = $dbh->prepare($sql);
+            $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_INT);
+            $sth->execute();
+            $result = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-            $sql = 'SELECT * FROM `team_users_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+            $sql = 'SELECT * FROM `user_tb`';
+            $sth = $dbh->query($sql);
+            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($result as $row) {
                 foreach ($result2 as $row2) {
-                    if ($_SESSION['id'] == $row2['user_id'] && $row['id'] == $row2['team_id']) {
-                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a><br>';
+                    if ($row['user_id'] == $row2['id']) {
+                        echo $row2['username'] . '<br>';
                     }
                 }
-
             }
-            ?>
-        </div>
-
+        }
+        ?>
 
         <div class="logout">
             <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
@@ -97,7 +91,7 @@ if ($dbh) {
         <hr>
     </div>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 

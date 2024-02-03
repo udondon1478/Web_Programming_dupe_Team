@@ -43,14 +43,24 @@ $dbh->exec($sql);//SQLの実行
 echo "テスト用一般ユーザを登録しました<br>";
 
 //チームテーブルの作成
-$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 $dbh->exec($sql);//SQLの実行
 echo "team_tbを作成しました<br>";
 
+//チームメンバー中間テーブルの作成
+$sql = "CREATE TABLE `team_users_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`user_id` INT NOT NULL,`is_owner` BOOLEAN DEFAULT FALSE,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
+$dbh->exec($sql);//SQLの実行
+echo "team_users_tbを作成しました<br>";
+
 //チャンネルテーブルの作成
-$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_name` VARCHAR(255) NOT NULL, `access_users` JSON NOT NULL, `status` BOOLEAN DEFAULT TRUE);";    //status: 0=private, 1=public
+$sql = "CREATE TABLE `channel_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`channel_name` VARCHAR(255) NOT NULL, `status` BOOLEAN DEFAULT TRUE,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`));";    //status: 0=private, 1=public
 $dbh->exec($sql);//SQLの実行
 echo "channel_tbを作成しました<br>";
+
+//チャンネルとチームの中間テーブルの作成
+$sql = "CREATE TABLE `team_channels_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`channel_id` INT NOT NULL,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`));";
+$dbh->exec($sql);//SQLの実行
+echo "team_channels_tbを作成しました<br>";
 
 //中間テーブルusers_channelsの作成
 //accessed_at: チャンネルに対してユーザーが最終アクセスをした日時
@@ -59,8 +69,8 @@ $dbh->exec($sql);//SQLの実行
 echo "users_channelsを作成しました<br>";
 
 //投稿テーブルの作成
-//ユーザー
-$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
+//nameはuser_idが一致するuser_tbのusernameを格納
+$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`title` VARCHAR(255) NOT NULL,`content` VARCHAR(255) NOT NULL,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
 $dbh->exec($sql);//SQLの実行
 echo "post_tbを作成しました<br>";
 
