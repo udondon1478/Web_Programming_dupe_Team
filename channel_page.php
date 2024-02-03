@@ -177,7 +177,8 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
             $sth->execute(); //SQLの実行
             echo '投稿しました';
             //再読み込み
-            
+            echo '<div>
+            </div>'
         }
         ?>
 
