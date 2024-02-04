@@ -84,7 +84,7 @@ echo "users_channelsを作成しました<br>";
 
 //投稿テーブルの作成
 //nameはuser_idが一致するuser_tbのusernameを格納
-$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`title` VARCHAR(255) NOT NULL,`content` VARCHAR(255) NOT NULL,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
+$sql = "CREATE TABLE `post_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`channel_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`title` VARCHAR(255) NOT NULL,`content` VARCHAR(255) NOT NULL,`image_path` VARCHAR(255),`thumbnail_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`),FOREIGN KEY (`channel_id`) REFERENCES `channel_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
 $dbh->exec($sql); //SQLの実行
 echo "post_tbを作成しました<br>";
 
@@ -92,5 +92,10 @@ echo "post_tbを作成しました<br>";
 $sql = "CREATE TABLE `reply_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`post_id` INT NOT NULL,`user_id` INT NOT NULL,`name` VARCHAR(255) NOT NULL,`content` TEXT,`image_path` VARCHAR(255),`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY (`post_id`) REFERENCES `post_tb`(`id`),FOREIGN KEY (`user_id`) REFERENCES `user_tb`(`id`));";
 $dbh->exec($sql); //SQLの実行
 echo "reply_tbを作成しました<br>";
+
+//チームアイコンを格納するテーブルの作成
+$sql = "CREATE TABLE `team_icon_tb`(`id` INT AUTO_INCREMENT PRIMARY KEY,`team_id` INT NOT NULL,`image_path` VARCHAR(255),FOREIGN KEY (`team_id`) REFERENCES `team_tb`(`id`));";
+$dbh->exec($sql); //SQLの実行
+echo "team_icon_tbを作成しました<br>";
 
 echo "<a href='db_drop.php'>DBの削除<br></a>";

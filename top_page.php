@@ -53,13 +53,13 @@ if ($dbh) {
                     <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
                     <?php
                     if ($_SESSION['is_admin'] == 1) {
-                            
-                            
-                            
-                            echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                        }
-                        ?>
-                    
+
+
+
+                        echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
+                    }
+                    ?>
+
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
                     <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
@@ -82,10 +82,10 @@ if ($dbh) {
             foreach ($result as $row) {
                 foreach ($result2 as $row2) {
                     if ($_SESSION['id'] == $row2['user_id'] && $row['id'] == $row2['team_id']) {
-                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a><br>';
+                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a>';
+                        //アイコン変更ボタンの追加
                     }
                 }
-
             }
             ?>
         </div>
@@ -97,7 +97,7 @@ if ($dbh) {
         <hr>
     </div>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 

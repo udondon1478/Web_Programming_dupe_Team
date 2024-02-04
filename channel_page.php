@@ -117,6 +117,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                     echo '<div class="post-content">';
                     echo '<h3>' . $row['title'] . '</h3>';
                     echo '<p>' . $row['content'] . '</p>';
+                    echo '<img src="' . $row['image_path'] . '" alt="画像">' . '<br>';
                     //返信ボタン
                     echo '<a class="btn btn-primary" href="reply_page.php?post_id=' . $row['id'] . '">返信</a>';
                     echo '</div>';
@@ -127,7 +128,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
 
                     <?php
                     echo '<h2>投稿フォーム</h2>';
-                    echo '<form action="channel_page.php?channel_id=' . $_GET['channel_id'] . '" method="get" enctype="multipart/form-data">';
+                    echo '<form action="upload_form.php?channel_id=' . $_GET['channel_id'] . '" method="POST" enctype="multipart/form-data">';
                     echo '<input type="hidden" name="channel_id" value="' . $_GET['channel_id'] . '">';
                     echo '<input type="text" name="title" placeholder="タイトル"><br>';
                     echo '<textarea name="content"></textarea><br>';
