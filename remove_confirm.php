@@ -54,6 +54,7 @@ require_once(__DIR__ . '/functions.php');
 
         <?php
         // デバッグ用POSTで送信された内容を全て書き出す
+
         ?>
 
         <!--POSTの中に含まれているキーの数をもとに役割が変更されたユーザーidを格納する配列を作成-->
@@ -91,17 +92,17 @@ require_once(__DIR__ . '/functions.php');
         if ($dbh) {
             //DB接続成功
             //配列上でのuser_idは0から始まっているため、$iは0から始まる
+            //$user_idに含まれるidだけ一致するレコードを削除
             for ($i = 0; $i < $count - 1; $i++) {
-                $j = $i + 1;
-                $sql = 'UPDATE `team_users_tb` SET `is_owner` = :is_owner WHERE `team_id` = :team_id AND `user_id` = :user_id';
+                $sql = "DELETE FROM `team_users_tb` WHERE `user_id` = :user_id AND `team_id` = :team_id";
                 $sth = $dbh->prepare($sql);
-                $sth->bindValue(':team_id', $_POST['team_id'], PDO::PARAM_INT);
                 $sth->bindValue(':user_id', $user_id[$i], PDO::PARAM_INT);
-                $sth->bindValue(':is_owner', $_POST['role' . $j], PDO::PARAM_INT);
+                $sth->bindValue(':team_id', $_POST['team_id'], PDO::PARAM_INT);
                 $sth->execute();
             }
-            echo "役割を変更しました。<br>";
+            echo 'チームからユーザーを削除しました';
         }
+
         ?>
     </div>
 

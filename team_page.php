@@ -52,11 +52,11 @@ $_SESSION['team_id'] = $_GET['team_id'];
             <h1>▪️掲示板メニュー <br></h1>
             <nav class="navbar navbar-expand-sm">
                 <div class="navbar-nav">
-                    
+
                     <?php
-                    
-                        echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                    
+
+                    echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
+
                     ?>
 
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
@@ -71,6 +71,8 @@ $_SESSION['team_id'] = $_GET['team_id'];
             <a href="create_channel_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チャンネルを作成</a>
             <!-- アカウントの役割変更 -->
             <a href="select_role.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントの役割変更</a>
+            <!-- アカウントの退会 -->
+            <a href="remove_from_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントの強制退会</a>
             <!-- アカウントをチームに追加-->
             <a href="force_add_account_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントを追加</a>
             <!-- メンバー一覧を表示 -->

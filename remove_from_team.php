@@ -52,8 +52,8 @@ require_once(__DIR__ . '/functions.php');
 
         </div>
 
-        <!--ドロップダウンによる役割設定-->
-        <div class="dropdown">
+        <!--チェックでユーザー選択-->
+        <div class="checks">
             <div class="owners">
                 <h2>チームのユーザー</h2>
                 <?php
@@ -74,25 +74,21 @@ require_once(__DIR__ . '/functions.php');
 
                     //team_idが$_SESSION['team_id']と一致していて、役割が「owner」の場合
                     ?>
-                    <form action="change_role.php" method="post">
+                    <form action="remove_confirm.php" method="post">
                     <?php
                     foreach ($result as $row) {
                         foreach ($result2 as $row2) {
                             if ($row['user_id'] == $row2['id'] && $row['is_owner'] == '1') {
                                 echo "現在の所有者: " . $row2['username'] . '<br>';
-                                //役割のプルダウンメニューを表示
-                                echo "<select name='role{$row['user_id']}'>";
-                                echo '<option value="1">管理者</option>';
-                                echo '<option value="0">一般ユーザー</option>';
-                                echo '</select><br>';
+                                //ユーザーにチェックマークを表示
+                                echo "<input type='checkbox' name='role{$row['user_id']}' value='1'>";
+                                echo '</input><br>';
                                 //後からクラス挿入して整形予定
                             }else if($row['user_id'] == $row2['id'] && $row['is_owner'] != '1'){
                                 echo "一般ユーザー: " . $row2['username'] . '<br>';
-                                //役割のプルダウンメニューを表示
-                                echo "<select name='role{$row['user_id']}'>";
-                                echo '<option value="1">管理者</option>';
-                                echo '<option value="0">一般ユーザー</option>';
-                                echo '</select><br>';
+                                //ユーザーにチェックマークを表示
+                                echo "<input type='checkbox' name='role{$row['user_id']}' value='1'>";
+                                echo '</input><br>';
                                 //後からクラス挿入して整形予定
                             }
                             
