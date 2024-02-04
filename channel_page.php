@@ -90,7 +90,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                     }
                     ?>
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
-                    
+
                 </div>
             </nav>
         </div>
@@ -162,7 +162,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                 $fileError = $_FILES['file']['error'];
                 $fileSize = $_FILES['file']['size'];
             }
-            
+
 
 
             //データベースへの問い合わせSQL文(文字列)
@@ -177,8 +177,7 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
             $sth->execute(); //SQLの実行
             echo '投稿しました';
             //再読み込み
-            echo '<div>
-            </div>'
+            header('Location: channel_page.php?channel_id=' . $_GET['channel_id']);
         }
         ?>
 
@@ -215,7 +214,6 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
         // p タグの中身を取得して関数を適用する
         var p = document.querySelector("p");
         p.innerHTML = addSpan(p.innerHTML);
-
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
