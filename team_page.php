@@ -71,6 +71,9 @@ $_SESSION['team_id'] = $_GET['team_id'];
             <a href="create_channel_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チャンネルを作成</a>
             <!-- アカウントの役割変更 -->
             <a href="select_role.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントの役割変更</a>
+            <!-- アカウントの招待 -->
+            <button class="copy_btn btn btn-primary">アカウントの招待(URLをコピーする)</button>
+            <p class="copy_text" hidden>http://localhost:8890/WP2023/15/invite_user.php?team_id=<?php echo $_GET['team_id'] ?></p>
             <!-- アカウントの退会 -->
             <a href="remove_from_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントの強制退会</a>
             <!-- アカウントをチームに追加-->
@@ -107,6 +110,29 @@ $_SESSION['team_id'] = $_GET['team_id'];
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script>
+        $(function() {
+            // .copy_btnをクリックしたら
+            $('.copy_btn').on('click', function() {
+                // 文字列(URL)を取得
+                var copyText = $('.copy_text').text();
+                // 取得した文字列(URL)を一時的にtextareaにセットする
+                var $temp = $('<textarea></textarea>');
+                $temp.val(copyText);
+                $('body').append($temp);
+                // textareaを選択状態に
+                $temp.select();
+                // クリップボードにコピー
+                document.execCommand('copy');
+                // textareaを削除する
+                $temp.remove();
+                // アラートを表示
+                alert('URLをコピーしました');
+            });
+        });
+    </script>
 </body>
 
 </html>
