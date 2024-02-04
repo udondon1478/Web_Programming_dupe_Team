@@ -16,6 +16,8 @@ if ($dbh) {
     $sth->execute(); //SQLの実行
     $buff = $sth->fetch(PDO::FETCH_ASSOC); //結果の取得
 }
+
+$_SESSION['team_id'] = $_GET['team_id'];
 ?>
 
 
@@ -50,14 +52,11 @@ if ($dbh) {
             <h1>▪️掲示板メニュー <br></h1>
             <nav class="navbar navbar-expand-sm">
                 <div class="navbar-nav">
-                    <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
+
                     <?php
-                    if ($_SESSION['is_admin'] == 1) {
 
+                    echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
 
-
-                        echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                    }
                     ?>
 
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
@@ -67,38 +66,21 @@ if ($dbh) {
 
         </div>
 
-        <div class="team_grid container">
-            <h1>▪️チーム一覧 <br></h1>
-            <!--team_tbからteam_nameを取得、リンク先はteam_page.php-->
-            <?php
-            $sql = 'SELECT * FROM `team_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-            $sql = 'SELECT * FROM `team_users_tb`';
-            $sth = $dbh->query($sql); //SQLの実行
-            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
-
-            foreach ($result as $row) {
-                foreach ($result2 as $row2) {
-                    if ($_SESSION['id'] == $row2['user_id'] && $row['id'] == $row2['team_id']) {
-                        //アイコンの表示
-                        echo '<img src="' . $row['team_icon'] . '" width="100px" height="100px">';
-                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a>';
-                        //アイコン変更ボタンの追加
-                        echo '<button type="button" class="btn btn-primary" onclick="location.href=\'change_icon.php?team_id=' . $row['id'] . '\'">アイコン変更</button>';
-                        echo '<br>';
-                    }
-                }
-            }
-            ?>
+        <div class="form">
+            <form action="change_icon_confirm.php?team_id=<?= $_GET['team_id'] ?>" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="team_id" value="<?= $_GET['team_id'] ?>">
+                <input type="file" name="file">
+                <input type="submit" value="変更">
+            </form>
         </div>
 
 
-        <div class="logout">
-            <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
-        </div>
-        <hr>
+    </div>
+
+    <div class="logout">
+        <a class="btn btn-primary" href="logout.php">【ログアウト】</a> <br>
+    </div>
+    <hr>
     </div>
 
 

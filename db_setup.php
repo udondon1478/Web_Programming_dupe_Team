@@ -43,7 +43,7 @@ $dbh->exec($sql); //SQLの実行
 echo "テスト用一般ユーザを登録しました<br>";
 
 //チームテーブルの作成
-$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+$sql = "CREATE TABLE `team_tb` (`id` INT AUTO_INCREMENT PRIMARY KEY, `team_name` VARCHAR(255) NOT NULL, `team_icon` VARCHAR(255), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 $dbh->exec($sql); //SQLの実行
 echo "team_tbを作成しました<br>";
 
