@@ -70,7 +70,7 @@ $_SESSION['team_id'] = $_GET['team_id'];
         <div class="utilies">
             <a href="create_channel_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チャンネルを作成</a>
             <!-- アカウントの役割変更 -->
-            <a href="change_role.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントの役割変更</a>
+            <a href="select_role.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントの役割変更</a>
             <!-- アカウントをチームに追加-->
             <a href="force_add_account_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントを追加</a>
             <!-- メンバー一覧を表示 -->

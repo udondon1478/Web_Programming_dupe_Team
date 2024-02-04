@@ -34,37 +34,61 @@ require_once(__DIR__ . '/functions.php');
             </div>
         </div>
 
-        <!--ドロップダウンによる役割設定-->
-        <div class="dropdown">
-            <div class="owners">
-                <h2>チームの所有者</h2>
-                <?php
-                //DBへの接続
-                $dbh = connectDB();
-                if ($dbh) {
-                    //DB接続成功
-                    $sql = 'SELECT * FROM `team_users_tb` WHERE `team_id` = :team_id';
-                    $sth = $dbh->prepare($sql);
-                    $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_INT);
-                    $sth->execute();
-                    $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+        <!-- 前のページで送信されたPOSTの内容を全て表示 -->
+        <?php
+        // post.php
+        // POSTで送信された内容を全て書き出す
+        foreach ($_POST as $key => $value) {
+            echo $key . ": " . $value . "<br>";
+        }
+        ?>
 
-                    $sql = 'SELECT * FROM `user_tb`';
-                    $sth = $dbh->query($sql);
-                    $result2 = $sth->fetchAll(PDO::FETCH_ASSOC);
+        <!--POSTの中に含まれているキーの数をもとに役割が変更されたユーザーidを格納する配列を作成-->
+        <?php
+        $count = count($_POST);
 
-                    //team_idが$_SESSION['team_id']と一致していて、役割が「owner」の場合
-                    foreach ($result as $row) {
-                        foreach ($result2 as $row2) {
-                            if ($row['user_id'] == $row2['id'] && $row['is_owner'] == '1') {
-                                echo $row2['username'] . '<br>';
-                            }
-                        }
-                    }
-                }
-                ?>
-            </div>
-        </div>
+        //デバッグ用
+        
+
+        //user_idの中には$_POST[role"n"]というnameに変数を持つキーを入れる
+        $user_id = [];
+
+        //$_POST[role"n"]のキーの値ではなくnameの変数部分の値を入れなければならない
+        //だいぶ面倒
+
+        foreach ($_POST as $key => $value) {
+            if ($key == "team_id") {
+                continue;
+            }
+            $parts = explode("role", $key);
+            //デバッグ用
+            
+            
+            $user_id[] = $parts[1];
+        }
+
+        //デバッグ用$user_id
+        print_r($user_id);
+        ?>
+
+        <!--DBの処理-->
+        <?php
+        //DBへの接続
+        $dbh = connectDB();
+        if ($dbh) {
+            //DB接続成功
+            //配列上でのuser_idは0から始まっているため、$iは0から始まる
+            for ($i = 0; $i < $count - 1; $i++) {
+                $j = $i + 1;
+                $sql = 'UPDATE `team_users_tb` SET `is_owner` = :is_owner WHERE `team_id` = :team_id AND `user_id` = :user_id';
+                $sth = $dbh->prepare($sql);
+                $sth->bindValue(':team_id', $_POST['team_id'], PDO::PARAM_INT);
+                $sth->bindValue(':user_id', $user_id[$i], PDO::PARAM_INT);
+                $sth->bindValue(':is_owner', $_POST['role' . $j], PDO::PARAM_INT);
+                $sth->execute();
+            }
+        }
+        ?>
     </div>
 
 
