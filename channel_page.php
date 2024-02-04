@@ -90,6 +90,8 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                     }
                     ?>
                     <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
+                                <!--プライベートチャンネルへのアクセス権の付与-->
+            <a href="add_account_to_private_channel.php?channel_id=<?php echo $_GET['channel_id'] ?>" class="btn btn-primary">アカウントをプライベートチャンネルに追加</a>
 
                 </div>
             </nav>

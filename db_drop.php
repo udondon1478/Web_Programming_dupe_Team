@@ -12,7 +12,7 @@ if (!$dbh) {
     exit();
 }
 
-$tables = ['user_tb','team_tb','team_users_tb','channel_tb','team_channels_tb','users_channels','post_tb','reply_tb'];//テーブルの配列
+$tables = ['user_tb','team_tb','team_users_tb','channel_tb', 'channel_users_tb','team_channels_tb','users_channels','post_tb','reply_tb'];//テーブルの配列
 
 //外部キー制約を一時的に無効にする
 $dbh->exec('SET foreign_key_checks=0;');

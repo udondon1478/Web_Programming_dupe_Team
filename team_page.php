@@ -69,6 +69,7 @@ $_SESSION['team_id'] = $_GET['team_id'];
         <!-- channelを表示 -->
         <div class="utilies">
             <a href="create_channel_at_team.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">チャンネルを作成</a>
+
             <!-- アカウントの役割変更 -->
             <a href="select_role.php?team_id=<?php echo $_GET['team_id'] ?>" class="btn btn-primary">アカウントの役割変更</a>
             <!-- アカウントの招待 -->
@@ -90,13 +91,101 @@ $_SESSION['team_id'] = $_GET['team_id'];
             $sth = $dbh->prepare($sql); //SQLの準備
             $sth->bindValue(':team_id', $_GET['team_id'], PDO::PARAM_STR); //プレースホルダーに値をバインド
             $sth->execute(); //SQLの実行
+            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
 
+            $sql2 = 'SELECT * FROM `channel_users_tb`';
+            $sth2 = $dbh->prepare($sql2);
+            $sth2->execute();
+            $result2 = $sth2->fetchAll(PDO::FETCH_ASSOC);
 
+            foreach ($result as $row) {
+                if($row['status'] == 0) {
+                    foreach ($result2 as $row2){
+                        if ($row['id'] == $row2['channel_id'] && $_SESSION['id'] == $row2['user_id']) {
+                            echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                        }
+                    }
+                    if ($_SESSION['is_admin'] == 1) {
+                        echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                    }
+                }else {
+                    echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                }
 
+            }
 
+            /*
+            if ($_SESSION['is_admin'] == 1) {
+                foreach ($sth as $row) {
+                    echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                }
+            } else {
+                foreach ($sth as $row) {
+                    if ($row['status'] == 1) {
+                        echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                    }
+                }
+            }
+            */
+
+            /*
+            foreach ($result2 as $row2) {
+                if ($row['id'] == $row2['channel_id'] && $_SESSION['id'] == $row2['user_id']) {
+                    echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                }
+                if ($row['status'] == 1) {
+                    echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                }
+            }
+
+            if ($_SESSION['is_admin'] == 1) {
+                foreach ($sth as $row) {
+                    echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                }
+            } else {
+                foreach ($sth as $row) {
+                    foreach ($result2 as $row2) {
+                        if ($row['id'] == $row2['channel_id'] && $_SESSION['id'] == $row2['user_id']) {
+                            echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                        }
+                        if ($row['status'] == 1) {
+                            echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                        }
+                    }
+                }
+            }
+            */
+
+            //is_adminが1ならすべてのチャンネルを表示
+            /*
+            if ($_SESSION['is_admin'] == 1) {
+                foreach ($sth as $row) {
+                    if($_GET['team_id'] == $row['team_id']) {
+                    echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                }
+            }
+            } else {
+                //team_channels_tbの現在アクセスしているチャンネルを取得
+                //users_channelsのchannel_idに対してaccessed_atが存在するユーザーはそのchannelを表示
+                foreach ($sth as $row){
+                    foreach ($result2 as $row2){
+                        if($_GET['team_id'] == $row['team_id']) {
+                            if($row['id'] == $row2['channel_id'] && $_SESSION['id'] == $row2['user_id'] || $row['status'] == 1){
+                                echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                            }
+                        }if($row['status'] == 1){
+                            echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
+                        }
+                    }
+                }
+            }
+            */
+
+            /*仮保存
             foreach ($sth as $row) {
                 echo '<a class="btn btn-primary btn_channel-' . $row['id'] . '" href="channel_page.php?channel_id=' . $row['id'] . '">' . $row['channel_name'] . '</a> <br>';
             }
+            */
             ?>
 
 
