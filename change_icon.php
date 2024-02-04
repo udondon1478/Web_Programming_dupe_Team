@@ -69,7 +69,11 @@ $_SESSION['team_id'] = $_GET['team_id'];
         <div class="form">
             <form action="change_icon_confirm.php?team_id=<?= $_GET['team_id'] ?>" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="team_id" value="<?= $_GET['team_id'] ?>">
-                <input type="file" name="file">
+                <div class="upload-area">
+                    <p>クリック、またはD&Dでファイルを追加</p>
+                    <input type="file" name="file" id="file">
+                </div>
+
                 <input type="submit" value="変更">
             </form>
         </div>
@@ -88,3 +92,38 @@ $_SESSION['team_id'] = $_GET['team_id'];
 </body>
 
 </html>
+
+<style>
+    form {
+        margin: 50px auto;
+        width: 800px;
+        height: 400px;
+        box-shadow: 0 0 2px #3e3e3e;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .upload-area {
+        margin: auto;
+        width: 85%;
+        height: 300px;
+        position: relative;
+        border: 1rem dotted rgba(0, 0, 0, 4)
+    }
+
+    .upload-area p {
+        width: 100%;
+        position: absolute;
+        top: 7rem;
+        opacity: .8;
+    }
+
+    #file {
+    top: 0;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+</style>
