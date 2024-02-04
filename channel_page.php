@@ -117,7 +117,9 @@ $_SESSION['channel_id'] = $_GET['channel_id'];
                     echo '<div class="post-content">';
                     echo '<h3>' . $row['title'] . '</h3>';
                     echo '<p>' . $row['content'] . '</p>';
-                    echo '<img src="' . $row['image_path'] . '" alt="画像">' . '<br>';
+                    if ($row['image_path'] != null){
+                        echo '<img src="' . $row['image_path'] . '" alt="画像">' . '<br>';
+                    }
                     //返信ボタン
                     echo '<a class="btn btn-primary" href="reply_page.php?post_id=' . $row['id'] . '">返信</a>';
                     echo '</div>';
