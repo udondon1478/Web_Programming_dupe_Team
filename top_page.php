@@ -52,20 +52,46 @@ if ($dbh) {
                 <div class="navbar-nav">
                     <!-- ['is_admin']がTRUEの時だけshow_messageのリンクを表示 -->
                     <?php
-                    if ($_SESSION['is_admin'] == TRUE) {
-                            //管理者権限あり
-                            echo '<a class="nav-item nav-link" href="delete_message.php">メッセージの管理</a> <br>';
-                            //アカウント作成ページ
-                            echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
-                        }
-                        ?>
-                    <a class="nav-item nav-link" href="message.php">メッセージを書く</a> <br>
-                    <a class="nav-item nav-link" href="show_message.php">メッセージを読む</a> <br>
-                    <a class="nav-item nav-link" href="search_message.php">メッセージを探す</a> <br>
-                    <a class="nav-item nav-link" href="account_list.php">アカウント一覧</a> <br>
+                    if ($_SESSION['is_admin'] == 1) {
+
+
+
+                        echo '<a class="nav-item nav-link" href="create_account.php">アカウントの作成</a> <br>';
+                    }
+                    ?>
+
+                    <a class="nav-item nav-link" href="top_page.php">トップページ</a> <br>
+                    <a class="nav-item nav-link" href="create_team.php">チームを作成</a>
                 </div>
             </nav>
 
+        </div>
+
+        <div class="team_grid container">
+            <h1>▪️チーム一覧 <br></h1>
+            <!--team_tbからteam_nameを取得、リンク先はteam_page.php-->
+            <?php
+            $sql = 'SELECT * FROM `team_tb`';
+            $sth = $dbh->query($sql); //SQLの実行
+            $result = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+
+            $sql = 'SELECT * FROM `team_users_tb`';
+            $sth = $dbh->query($sql); //SQLの実行
+            $result2 = $sth->fetchAll(PDO::FETCH_ASSOC); //結果の取得
+
+            foreach ($result as $row) {
+                foreach ($result2 as $row2) {
+                    if ($_SESSION['id'] == $row2['user_id'] && $row['id'] == $row2['team_id']) {
+                        //アイコンの表示
+                        echo '<img src="' . $row['team_icon'] . '" width="100px" height="100px">';
+                        echo '<a href="team_page.php?team_id=' . $row['id'] . '">' . $row['team_name'] . '</a>';
+                        //アイコン変更ボタンの追加
+                        echo '<button type="button" class="btn btn-primary" onclick="location.href=\'change_icon.php?team_id=' . $row['id'] . '\'">アイコン変更</button>';
+                        echo '<br>';
+                    }
+                }
+            }
+            ?>
         </div>
 
 
@@ -75,7 +101,7 @@ if ($dbh) {
         <hr>
     </div>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 

@@ -1,0 +1,6 @@
+不具合回避のためMAMPのApacheのポート番号が規定値の8888から8890に変更した環境でこのコードを作成しました。
+そのため、team_page.php内のURLを用いてアカウントを招待する為のURLが採点者の方とは違うものになると思います。
+以下の部分に含まれるURLを適宜変更していただければ幸いです。
+
+top_page.php内
+<p class="copy_text" hidden>http://localhost:8890/WP2023/15/top_page.php</p>
